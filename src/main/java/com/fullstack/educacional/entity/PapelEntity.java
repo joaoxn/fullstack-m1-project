@@ -1,5 +1,6 @@
 package com.fullstack.educacional.entity;
 
+import com.fullstack.educacional.enums.Papel;
 import jakarta.persistence.Column;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -14,5 +15,5 @@ public class PapelEntity {
     @Setter(AccessLevel.NONE)
     private Long id;
 
-    private String nome;
+    private Papel nome;
 }
