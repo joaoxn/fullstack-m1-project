@@ -1,9 +1,9 @@
 package com.fullstack.educacional.service;
 
-import com.fullstack.educacional.datasource.entity.AlunoEntity;
+import com.fullstack.educacional.datasource.entity.DocenteEntity;
 import com.fullstack.educacional.datasource.entity.TurmaEntity;
 import com.fullstack.educacional.datasource.entity.UsuarioEntity;
-import com.fullstack.educacional.datasource.repository.AlunoRepository;
+import com.fullstack.educacional.datasource.repository.DocenteRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -12,39 +12,34 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class AlunoService {
+public class DocenteService {
 
-    private final AlunoRepository repository;
+    private final DocenteRepository repository;
 
-    private AlunoEntity get(Long id) {
+    private DocenteEntity get(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Entidade não encontrada com ID: " + id));
     }
 
-    private List<AlunoEntity> getAll() {
+    private List<DocenteEntity> getAll() {
         return repository.findAll();
     }
 
-    private AlunoEntity create(AlunoEntity entity) {
+    private DocenteEntity create(DocenteEntity entity) {
         return repository.save(entity);
     }
 
-    private AlunoEntity alter(Long id, AlunoEntity entity) {
-        AlunoEntity entityFound = repository.findById(id)
+    private DocenteEntity alter(Long id, DocenteEntity entity) {
+        DocenteEntity entityFound = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Entidade não encontrada com ID: " + id));
 
         return repository.save(equalProperties(entityFound, entity));
     }
 
-    private AlunoEntity equalProperties(AlunoEntity entity, AlunoEntity data) {
+    private DocenteEntity equalProperties(DocenteEntity entity, DocenteEntity data) {
         String Nome = data.getNome();
         if (Nome != null) {
             entity.setNome(Nome);
-        }
-
-        TurmaEntity turma = data.getTurma();
-        if (turma != null) {
-            entity.setTurma(turma);
         }
 
         UsuarioEntity usuario = data.getUsuario();
@@ -52,16 +47,16 @@ public class AlunoService {
             entity.setUsuario(usuario);
         }
 
-        LocalDate dataNascimento = data.getDataNascimento();
-        if (dataNascimento != null) {
-            entity.setDataNascimento(dataNascimento);
+        LocalDate dataEntrada = data.getDataEntrada();
+        if (dataEntrada != null) {
+            entity.setDataEntrada(dataEntrada);
         }
 
         return entity;
     }
 
     private void delete(Long id) {
-        AlunoEntity entity = repository.findById(id)
+        DocenteEntity entity = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Entidade não encontrada com ID: " + id));
         repository.delete(entity);
     }

@@ -1,4 +1,4 @@
-package com.fullstack.educacional.entity;
+package com.fullstack.educacional.datasource.entity;
 
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -12,20 +12,19 @@ import java.time.LocalDate;
 
 @Table
 @Data
-public class TurmaEntity {
+public class AlunoEntity {
     @Id
     @Setter(AccessLevel.NONE)
     private Long id;
 
     private String nome;
 
-    private LocalDate dataEntrada;
+    private LocalDate dataNascimento;
+
+    @JoinColumn(name = "usuario_id", nullable = false)
+    private UsuarioEntity usuario;
 
     @ManyToOne
-    @JoinColumn(name = "id_professor")
-    private DocenteEntity docente;
-
-    @ManyToOne
-    @JoinColumn(name = "id_curso")
-    private CursoEntity curso;
+    @JoinColumn(name = "turma_id", nullable = false)
+    private TurmaEntity turma;
 }

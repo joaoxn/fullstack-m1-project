@@ -1,4 +1,4 @@
-package com.fullstack.educacional.entity;
+package com.fullstack.educacional.datasource.entity;
 
 import com.fullstack.educacional.enums.Papel;
 import jakarta.persistence.Column;

@@ -12,7 +12,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class AlunoService {
+public class TokenService {
 
     private final AlunoRepository repository;
 

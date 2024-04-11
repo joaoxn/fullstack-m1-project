@@ -1,4 +1,4 @@
-package com.fullstack.educacional.entity;
+package com.fullstack.educacional.datasource.entity;
 
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -20,11 +20,11 @@ public class NotaEntity {
     private String nome;
 
     @ManyToOne
-    @JoinColumn(name = "id_professor")
+    @JoinColumn(name = "professor_id")
     private DocenteEntity docente;
 
     @ManyToOne
-    @JoinColumn(name = "id_materia")
+    @JoinColumn(name = "materia_id")
     private MateriaEntity materia;
 
     private Integer valor;

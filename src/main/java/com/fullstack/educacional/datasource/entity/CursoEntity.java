@@ -1,4 +1,4 @@
-package com.fullstack.educacional.entity;
+package com.fullstack.educacional.datasource.entity;
 
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;

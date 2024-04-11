@@ -1,4 +1,4 @@
-package com.fullstack.educacional.entity;
+package com.fullstack.educacional.datasource.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -17,6 +17,6 @@ public class MateriaEntity {
     private LocalDate dataEntrada;
 
     @ManyToOne
-    @JoinColumn(name = "id_curso")
+    @JoinColumn(name = "curso_id")
     private CursoEntity curso;
 }

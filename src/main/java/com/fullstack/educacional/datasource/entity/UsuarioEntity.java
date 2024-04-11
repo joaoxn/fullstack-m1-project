@@ -1,4 +1,4 @@
-package com.fullstack.educacional.entity;
+package com.fullstack.educacional.datasource.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -22,6 +22,6 @@ public class UsuarioEntity {
     private String senha;
 
     @ManyToOne
-    @JoinColumn(name = "id_papel", nullable = false)
+    @JoinColumn(name = "papel_id", nullable = false)
     private PapelEntity papel;
 }
