@@ -12,31 +12,14 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class AlunoService {
+public class AlunoService extends GenericService<AlunoEntity, AlunoRepository> {
 
-    private final AlunoRepository repository;
-
-    private AlunoEntity get(Long id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Entidade não encontrada com ID: " + id));
+    public AlunoService(AlunoRepository repository) {
+        super(repository);
     }
 
-    private List<AlunoEntity> getAll() {
-        return repository.findAll();
-    }
-
-    private AlunoEntity create(AlunoEntity entity) {
-        return repository.save(entity);
-    }
-
-    private AlunoEntity alter(Long id, AlunoEntity entity) {
-        AlunoEntity entityFound = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Entidade não encontrada com ID: " + id));
-
-        return repository.save(equalProperties(entityFound, entity));
-    }
-
-    private AlunoEntity equalProperties(AlunoEntity entity, AlunoEntity data) {
+    @Override
+    AlunoEntity equalProperties(AlunoEntity entity, AlunoEntity data) {
         String Nome = data.getNome();
         if (Nome != null) {
             entity.setNome(Nome);
@@ -58,11 +41,5 @@ public class AlunoService {
         }
 
         return entity;
-    }
-
-    private void delete(Long id) {
-        AlunoEntity entity = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Entidade não encontrada com ID: " + id));
-        repository.delete(entity);
     }
 }
