@@ -1,5 +1,6 @@
 package com.fullstack.educacional.datasource.entity;
 
+import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Table;
@@ -11,6 +12,7 @@ import java.time.LocalDate;
 
 @Table
 @Data
+@Entity
 public class DocenteEntity {
     @Id
     @Setter(AccessLevel.NONE)

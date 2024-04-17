@@ -9,6 +9,7 @@ import java.time.LocalDate;
 
 @Table
 @Data
+@Entity
 public class MateriaEntity {
     @Id
     @Setter(AccessLevel.NONE)

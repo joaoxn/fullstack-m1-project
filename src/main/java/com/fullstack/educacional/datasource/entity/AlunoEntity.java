@@ -1,9 +1,6 @@
 package com.fullstack.educacional.datasource.entity;
 
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
@@ -12,6 +9,7 @@ import java.time.LocalDate;
 
 @Table
 @Data
+@Entity
 public class AlunoEntity {
     @Id
     @Setter(AccessLevel.NONE)

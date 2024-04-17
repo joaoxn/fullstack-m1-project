@@ -10,10 +10,10 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Service
-public class UsuarioServiceImpl extends GenericServiceImpl<UsuarioEntity, UsuarioRepository, UsuarioServiceImpl> implements GenericService<UsuarioEntity> {
+public class UsuarioServiceImpl extends GenericServiceImpl<UsuarioEntity, UsuarioRepository> implements GenericService<UsuarioEntity> {
 
-    public UsuarioServiceImpl(UsuarioServiceImpl service, UsuarioRepository repository) {
-        super(service, repository);
+    public UsuarioServiceImpl(UsuarioRepository repository) {
+        super(repository);
     }
 
     @Override

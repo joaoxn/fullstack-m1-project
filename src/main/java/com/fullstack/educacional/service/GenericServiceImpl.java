@@ -8,9 +8,7 @@ import java.util.List;
 
 @Data
 @RequiredArgsConstructor
-public class GenericServiceImpl<E, R extends JpaRepository<E, Long>, S extends GenericService<E>> {
-
-    private final S service;
+public class GenericServiceImpl<E, R extends JpaRepository<E, Long>> {
 
     private final R repository;
 
@@ -31,7 +29,11 @@ public class GenericServiceImpl<E, R extends JpaRepository<E, Long>, S extends G
         E entityFound = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Entidade não encontrada com ID: " + id));
 
-        return repository.save(service.equalProperties(entityFound, entity));
+        return repository.save(equalProperties(entityFound, entity));
+    }
+
+    public E equalProperties(E entity, E data) {
+        return entity;
     }
 
     public void delete(Long id) {

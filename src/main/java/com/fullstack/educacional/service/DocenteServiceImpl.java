@@ -11,11 +11,11 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 
 @Service
-public class DocenteServiceImpl extends GenericServiceImpl<DocenteEntity, DocenteRepository, DocenteServiceImpl> implements GenericService<DocenteEntity> {
+public class DocenteServiceImpl extends GenericServiceImpl<DocenteEntity, DocenteRepository> implements GenericService<DocenteEntity> {
 
 
-    public DocenteServiceImpl(DocenteServiceImpl service, DocenteRepository repository) {
-        super(service, repository);
+    public DocenteServiceImpl(DocenteRepository repository) {
+        super(repository);
     }
 
     @Override

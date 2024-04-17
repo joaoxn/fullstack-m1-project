@@ -5,9 +5,12 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
 
+import java.io.Serializable;
+
 @Table
 @Data
-public class UsuarioEntity {
+@Entity
+public class UsuarioEntity implements Serializable {
     @Id
     @Setter(AccessLevel.NONE)
     private Long id;
