@@ -4,7 +4,6 @@ import com.fullstack.educacional.datasource.entity.AlunoEntity;
 import com.fullstack.educacional.datasource.entity.TurmaEntity;
 import com.fullstack.educacional.datasource.entity.UsuarioEntity;
 import com.fullstack.educacional.datasource.repository.AlunoRepository;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;

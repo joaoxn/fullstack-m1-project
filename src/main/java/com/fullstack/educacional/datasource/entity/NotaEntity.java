@@ -27,5 +27,5 @@ public class NotaEntity {
 
     private Integer valor;
 
-    private LocalDate data;
+    private LocalDate data = LocalDate.now();
 }

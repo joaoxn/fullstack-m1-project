@@ -11,4 +11,6 @@ import java.util.Optional;
 public interface UsuarioRepository extends JpaRepository<UsuarioEntity, Long> {
 
     Optional<List<UsuarioEntity>> findByPapelId(Long papelId);
+
+    Optional<UsuarioEntity> findByNome(String nome);
 }
