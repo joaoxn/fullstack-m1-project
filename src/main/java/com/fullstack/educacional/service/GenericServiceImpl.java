@@ -2,7 +2,11 @@ package com.fullstack.educacional.service;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.BadRequestException;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -14,7 +18,8 @@ public class GenericServiceImpl<E, R extends JpaRepository<E, Long>> {
 
     public E get(Long id) {
         return repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Entidade não encontrada com ID: " + id));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Entidade não encontrada com ID: " + id));
     }
 
     public List<E> getAll() {
@@ -27,7 +32,10 @@ public class GenericServiceImpl<E, R extends JpaRepository<E, Long>> {
 
     public E alter(Long id, E entity) {
         E entityFound = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Entidade não encontrada com ID: " + id));
+                .orElseThrow(
+                        () -> new ResponseStatusException(
+                                HttpStatus.NOT_FOUND,
+                                "Entidade não encontrada com ID: " + id));
 
         return repository.save(equalProperties(entityFound, entity));
     }
@@ -38,6 +46,8 @@ public class GenericServiceImpl<E, R extends JpaRepository<E, Long>> {
 
     public void delete(Long id) {
         E entity = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Entidade não encontrada com ID: " + id));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Entidade não encontrada com ID: " + id));
         repository.delete(entity);
-    }}
+    }
+}
