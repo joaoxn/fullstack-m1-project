@@ -1,0 +1,39 @@
+package com.fullstack.educacional.datasource.entity;
+
+import com.fullstack.educacional.controller.dto.request.LoginRequest;
+import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.Setter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import java.io.Serializable;
+
+@Table
+@Data
+@Entity
+public class UsuarioEntity implements Serializable {
+    @Id
+    @Setter(AccessLevel.NONE)
+    private Long id;
+
+    @Column(nullable = false)
+    private String nome;
+
+    @Column(nullable = false)
+    private String login;
+
+    @Column(nullable = false)
+    private String senha;
+
+    @ManyToOne
+    @JoinColumn(name = "papel_id", nullable = false)
+    private PapelEntity papel;
+
+    public boolean senhaValida(LoginRequest loginRequest, BCryptPasswordEncoder bCryptEncoder) {
+        return bCryptEncoder.matches(
+                loginRequest.senha(),
+                this.senha
+        );
+    }
+}

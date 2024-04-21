@@ -1,7 +1,7 @@
-package com.fullstack.educacional.entity;
+package com.fullstack.educacional.datasource.entity;
 
+import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -11,7 +11,8 @@ import java.time.LocalDate;
 
 @Table
 @Data
-public class DocenteEntity {
+@Entity
+public class CursoEntity {
     @Id
     @Setter(AccessLevel.NONE)
     private Long id;
@@ -19,7 +20,4 @@ public class DocenteEntity {
     private String nome;
 
     private LocalDate dataEntrada;
-
-    @JoinColumn(name = "id_usuario", nullable = false)
-    private UsuarioEntity usuario;
 }

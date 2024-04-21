@@ -1,9 +1,6 @@
-package com.fullstack.educacional.entity;
+package com.fullstack.educacional.datasource.entity;
 
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
@@ -12,6 +9,7 @@ import java.time.LocalDate;
 
 @Table
 @Data
+@Entity
 public class NotaEntity {
     @Id
     @Setter(AccessLevel.NONE)
@@ -20,14 +18,14 @@ public class NotaEntity {
     private String nome;
 
     @ManyToOne
-    @JoinColumn(name = "id_professor")
+    @JoinColumn(name = "professor_id")
     private DocenteEntity docente;
 
     @ManyToOne
-    @JoinColumn(name = "id_materia")
+    @JoinColumn(name = "materia_id")
     private MateriaEntity materia;
 
     private Integer valor;
 
-    private LocalDate data;
+    private LocalDate data = LocalDate.now();
 }
