@@ -19,7 +19,7 @@ public class CadastroController {
             @Validated @RequestBody UsuarioRequest usuarioRequest
     ) {
 
-        usuarioService.cadastraNovoUsuario(usuarioRequest);
+        usuarioService.create(usuarioRequest);
 
         return ResponseEntity.ok("Usuario Salvo!");
     }

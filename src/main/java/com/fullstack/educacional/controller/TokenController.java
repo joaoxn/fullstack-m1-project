@@ -1,8 +1,8 @@
 package com.fullstack.educacional.controller;
 
+import com.fullstack.educacional.controller.dto.request.LoginRequest;
 import com.fullstack.educacional.controller.dto.response.LoginResponse;
 import com.fullstack.educacional.service.TokenService;
-import com.fullstack.educacional.controller.dto.request.LoginRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -18,9 +18,9 @@ import java.time.Instant;
 public class TokenController {
 
     private final TokenService tokenService;
-    private static long TEMPO_EXPIRACAO = 36000L; //contante de tempo de expiração em segundos
+    private static long TEMPO_EXPIRACAO = 36000L; // em segundos
 
-    @PostMapping("/login") //post para gerar o token
+    @PostMapping("/login")
     public ResponseEntity<LoginResponse> gerarToken(
             @RequestBody LoginRequest loginRequest
     ){
