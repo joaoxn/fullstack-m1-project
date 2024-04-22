@@ -1,11 +1,8 @@
 package com.fullstack.educacional.service;
 
 import com.fullstack.educacional.controller.dto.request.DocenteRequest;
-import com.fullstack.educacional.datasource.entity.AlunoEntity;
 import com.fullstack.educacional.datasource.entity.DocenteEntity;
-import com.fullstack.educacional.datasource.entity.TurmaEntity;
 import com.fullstack.educacional.datasource.entity.UsuarioEntity;
-import com.fullstack.educacional.datasource.repository.AlunoRepository;
 import com.fullstack.educacional.datasource.repository.DocenteRepository;
 import com.fullstack.educacional.datasource.repository.UsuarioRepository;
 import org.springframework.stereotype.Service;
@@ -32,7 +29,7 @@ public class DocenteServiceImpl extends GenericServiceImpl<DocenteEntity, Docent
 
         UsuarioEntity usuario = null;
         try {
-            usuario = usuarioRepository.findByNome(data.nomeUsuario())
+            usuario = usuarioRepository.findByLogin(data.loginUsuario())
                     .orElseThrow();
         } catch (ResponseStatusException ignored) {}
         if (usuario != null) {

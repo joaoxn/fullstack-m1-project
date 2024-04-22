@@ -4,12 +4,9 @@ import com.fullstack.educacional.controller.dto.request.LoginRequest;
 import com.fullstack.educacional.controller.dto.response.LoginResponse;
 import com.fullstack.educacional.datasource.entity.UsuarioEntity;
 import com.fullstack.educacional.datasource.repository.UsuarioRepository;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
@@ -37,7 +34,7 @@ public class TokenService {
     ){
 
         UsuarioEntity usuarioEntity = usuarioRepository
-                .findByNome(loginRequest.nomeUsuario()) // busca dados de usuario por nomeUsuario
+                .findByLogin(loginRequest.login()) // busca dados de usuario por loginUsuario
                 .orElseThrow(                                  // caso usuario não exista gera um erro
                         ()->{
                             log.error("Erro, usuário não existe");
@@ -52,7 +49,7 @@ public class TokenService {
 
         Instant now = Instant.now();
 
-        String scope = usuarioEntity.getPapel().getNome().toString();
+        String scope = usuarioEntity.getPapel().getNome();
 
         JwtClaimsSet claims = JwtClaimsSet.builder() // Conjunto de campos do JWT, incluindo os campos pré-definidos e campos customizados
                 .issuer("projeto1") // autor do token

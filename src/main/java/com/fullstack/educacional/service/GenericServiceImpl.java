@@ -1,5 +1,7 @@
 package com.fullstack.educacional.service;
 
+import com.fullstack.educacional.datasource.entity.CursoEntity;
+import com.fullstack.educacional.datasource.repository.CursoRepository;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,7 +12,7 @@ import java.util.List;
 
 @Data
 @RequiredArgsConstructor
-public class GenericServiceImpl<E, DTO, R extends JpaRepository<E, Long>> {
+public abstract class GenericServiceImpl<E, DTO, R extends JpaRepository<E, Long>> {
 
     private final R repository;
     private final E newEntity;
@@ -39,9 +41,7 @@ public class GenericServiceImpl<E, DTO, R extends JpaRepository<E, Long>> {
         return repository.save(equalProperties(entityFound, data));
     }
 
-    public E equalProperties(E entity, DTO data) {
-        return entity;
-    }
+    public abstract E equalProperties(E entity, DTO data);
 
     public void delete(Long id) {
         E entity = repository.findById(id)

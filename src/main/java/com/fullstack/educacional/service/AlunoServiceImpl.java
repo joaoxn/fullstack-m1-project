@@ -1,19 +1,25 @@
 package com.fullstack.educacional.service;
 
-import com.fullstack.educacional.datasource.entity.AlunoEntity;
-import com.fullstack.educacional.datasource.entity.TurmaEntity;
-import com.fullstack.educacional.datasource.entity.UsuarioEntity;
+import com.fullstack.educacional.controller.dto.response.PontuacaoResponse;
+import com.fullstack.educacional.datasource.entity.*;
 import com.fullstack.educacional.datasource.repository.AlunoRepository;
+import com.fullstack.educacional.datasource.repository.NotaRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 public class AlunoServiceImpl extends GenericServiceImpl<AlunoEntity, AlunoEntity, AlunoRepository> implements GenericService<AlunoEntity, AlunoEntity> {
+    private final AlunoRepository repository;
+    private final NotaRepository notaRepository;
 
-
-    public AlunoServiceImpl(AlunoRepository repository) {
+    public AlunoServiceImpl(AlunoRepository repository, NotaRepository notaRepository) {
         super(repository, new AlunoEntity());
+        this.repository = repository;
+        this.notaRepository = notaRepository;
     }
 
     @Override
@@ -39,5 +45,20 @@ public class AlunoServiceImpl extends GenericServiceImpl<AlunoEntity, AlunoEntit
         }
 
         return entity;
+    }
+
+    public List<NotaEntity> getAllNotas(Long alunoId) {
+        AlunoEntity aluno = repository.findById(alunoId)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Nenhum aluno encontrado com ID: " + alunoId));
+
+        return notaRepository.findAllByAluno(aluno)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Nenhuma nota encontrada com aluno de nomeAluno: " + aluno.getNome()));
+    }
+
+    public PontuacaoResponse getPontuacaoTotal(Long alunoId) {
+        return null;
+        //TODO: criar lógica para pontuação total
     }
 }
