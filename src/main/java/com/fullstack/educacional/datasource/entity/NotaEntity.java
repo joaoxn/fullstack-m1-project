@@ -25,7 +25,7 @@ public class NotaEntity {
     @JoinColumn(name = "materia_id")
     private MateriaEntity materia;
 
-    private Integer valor;
+    private Float valor;
 
     private LocalDate data = LocalDate.now();
 }

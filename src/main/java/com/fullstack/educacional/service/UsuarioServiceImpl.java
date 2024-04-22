@@ -1,39 +1,41 @@
 package com.fullstack.educacional.service;
 
+import com.fullstack.educacional.controller.dto.request.UsuarioRequest;
 import com.fullstack.educacional.datasource.entity.PapelEntity;
 import com.fullstack.educacional.datasource.entity.UsuarioEntity;
-import com.fullstack.educacional.datasource.entity.UsuarioEntity;
+import com.fullstack.educacional.datasource.repository.PapelRepository;
 import com.fullstack.educacional.datasource.repository.UsuarioRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
-import java.util.List;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
-public class UsuarioServiceImpl extends GenericServiceImpl<UsuarioEntity, UsuarioRepository> implements GenericService<UsuarioEntity> {
+public class UsuarioServiceImpl extends GenericServiceImpl<UsuarioEntity, UsuarioRequest, UsuarioRepository> implements GenericService<UsuarioEntity, UsuarioRequest> {
 
-    public UsuarioServiceImpl(UsuarioRepository repository) {
-        super(repository);
+    private final PapelRepository papelRepository;
+
+    public UsuarioServiceImpl(UsuarioRepository repository, PapelRepository papelRepository) {
+        super(repository, new UsuarioEntity());
+        this.papelRepository = papelRepository;
     }
 
     @Override
-    public UsuarioEntity equalProperties(UsuarioEntity entity, UsuarioEntity data) {
-        String Nome = data.getNome();
+    public UsuarioEntity equalProperties(UsuarioEntity entity, UsuarioRequest data) {
+        String Nome = data.nome();
         if (Nome != null) {
             entity.setNome(Nome);
         }
 
-        String login = data.getLogin();
-        if (login != null) {
-            entity.setLogin(login);
-        }
-
-        String senha = data.getSenha();
+        String senha = data.senha();
         if (senha != null) {
             entity.setSenha(senha);
         }
 
-        PapelEntity papel = data.getPapel();
+        PapelEntity papel = null;
+        try {
+            papel = papelRepository.findByNome(data.nomePapel())
+                    .orElseThrow();
+        } catch (ResponseStatusException ignored) {}
         if (papel != null) {
             entity.setPapel(papel);
         }
