@@ -1,6 +1,6 @@
 package com.fullstack.educacional.controller;
 
-import com.fullstack.educacional.datasource.entity.AlunoEntity;
+import com.fullstack.educacional.controller.dto.request.DocenteRequest;
 import com.fullstack.educacional.datasource.entity.DocenteEntity;
 import com.fullstack.educacional.service.DocenteServiceImpl;
 import org.springframework.http.ResponseEntity;
@@ -8,11 +8,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@RestController
 @RequestMapping("docentes")
 public class DocenteController {
     private DocenteServiceImpl service;
 
-    @GetMapping("${id}")
+    @GetMapping("{id}")
     public ResponseEntity<DocenteEntity> get(Long id) {
         return ResponseEntity.ok(service.get(id));
     }
@@ -23,16 +24,16 @@ public class DocenteController {
     }
 
     @PostMapping
-    public ResponseEntity<DocenteEntity> post(@RequestBody DocenteEntity docente) {
+    public ResponseEntity<DocenteEntity> post(@RequestBody DocenteRequest docente) {
         return ResponseEntity.ok(service.create(docente));
     }
 
-    @PutMapping("${id}")
-    public ResponseEntity<DocenteEntity> put(@PathVariable Long id, @RequestBody DocenteEntity data) {
+    @PutMapping("{id}")
+    public ResponseEntity<DocenteEntity> put(@PathVariable Long id, @RequestBody DocenteRequest data) {
         return ResponseEntity.ok(service.alter(id, data));
     }
 
-    @DeleteMapping("${id}")
+    @DeleteMapping("{id}")
     public void delete(@PathVariable Long id) {
         service.delete(id);
     }

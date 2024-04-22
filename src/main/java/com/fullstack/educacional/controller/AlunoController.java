@@ -9,12 +9,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("aluno")
+@RequestMapping("alunos")
 @RequiredArgsConstructor
 public class AlunoController {
     private final AlunoServiceImpl service;
 
-    @GetMapping("${id}")
+    @GetMapping("{id}")
     public ResponseEntity<AlunoEntity> get(@PathVariable Long id) {
         return ResponseEntity.ok(service.get(id));
     }
@@ -29,12 +29,12 @@ public class AlunoController {
         return ResponseEntity.ok(service.create(aluno));
     }
 
-    @PutMapping("${id}")
+    @PutMapping("{id}")
     public ResponseEntity<AlunoEntity> put(@PathVariable Long id, @RequestBody AlunoEntity data) {
         return ResponseEntity.ok(service.alter(id, data));
     }
 
-    @DeleteMapping("${id}")
+    @DeleteMapping("{id}")
     public void delete(@PathVariable Long id) {
         service.delete(id);
     }

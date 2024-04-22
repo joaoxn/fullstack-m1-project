@@ -9,11 +9,11 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 
 @Service
-public class AlunoServiceImpl extends GenericServiceImpl<AlunoEntity, AlunoRepository> implements GenericService<AlunoEntity> {
+public class AlunoServiceImpl extends GenericServiceImpl<AlunoEntity, AlunoEntity, AlunoRepository> implements GenericService<AlunoEntity, AlunoEntity> {
 
 
     public AlunoServiceImpl(AlunoRepository repository) {
-        super(repository);
+        super(repository, new AlunoEntity());
     }
 
     @Override
