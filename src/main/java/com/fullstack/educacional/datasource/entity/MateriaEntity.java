@@ -7,12 +7,12 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 
-@Table
+@Table(name = "materia")
 @Data
 @Entity
 public class MateriaEntity {
     @Id
-    @Setter(AccessLevel.NONE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private LocalDate dataEntrada;

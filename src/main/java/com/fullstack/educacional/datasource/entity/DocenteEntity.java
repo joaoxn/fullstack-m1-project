@@ -1,21 +1,18 @@
 package com.fullstack.educacional.datasource.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
 
 import java.time.LocalDate;
 
-@Table
+@Table(name = "docente")
 @Data
 @Entity
 public class DocenteEntity {
     @Id
-    @Setter(AccessLevel.NONE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String nome;

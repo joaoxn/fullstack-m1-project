@@ -7,15 +7,17 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 
-@Table
+@Table(name = "nota")
 @Data
 @Entity
 public class NotaEntity {
     @Id
-    @Setter(AccessLevel.NONE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String nome;
+    @ManyToOne
+    @JoinColumn(name = "aluno_id")
+    private AlunoEntity aluno;
 
     @ManyToOne
     @JoinColumn(name = "professor_id")
@@ -25,7 +27,7 @@ public class NotaEntity {
     @JoinColumn(name = "materia_id")
     private MateriaEntity materia;
 
-    private Integer valor;
+    private Float valor;
 
     private LocalDate data = LocalDate.now();
 }

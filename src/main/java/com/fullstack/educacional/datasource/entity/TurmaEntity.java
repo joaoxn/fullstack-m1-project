@@ -7,12 +7,12 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 
-@Table
+@Table(name = "turma")
 @Data
 @Entity
 public class TurmaEntity {
     @Id
-    @Setter(AccessLevel.NONE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String nome;

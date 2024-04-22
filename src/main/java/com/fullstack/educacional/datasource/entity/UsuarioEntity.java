@@ -9,16 +9,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.io.Serializable;
 
-@Table
+@Table(name = "usuario")
 @Data
 @Entity
 public class UsuarioEntity implements Serializable {
     @Id
-    @Setter(AccessLevel.NONE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(nullable = false)
-    private String nome;
 
     @Column(nullable = false)
     private String login;
