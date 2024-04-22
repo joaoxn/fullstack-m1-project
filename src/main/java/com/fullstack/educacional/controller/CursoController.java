@@ -4,7 +4,9 @@ import com.fullstack.educacional.controller.dto.request.CursoRequest;
 import com.fullstack.educacional.datasource.entity.CursoEntity;
 import com.fullstack.educacional.datasource.entity.MateriaEntity;
 import com.fullstack.educacional.datasource.repository.CursoRepository;
+import com.fullstack.educacional.service.CursoServiceImpl;
 import com.fullstack.educacional.service.GenericServiceImpl;
+import lombok.RequiredArgsConstructor;
 import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,8 +15,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("cursos")
+@RequiredArgsConstructor
 public class CursoController {
-    private GenericServiceImpl<CursoEntity, CursoRequest, CursoRepository> service;
+    private CursoServiceImpl service;
 
     @GetMapping("{id}")
     public ResponseEntity<CursoEntity> get(@PathVariable Long id) {
@@ -46,6 +49,6 @@ public class CursoController {
 
     @GetMapping("{id}/materias")
     public ResponseEntity<List<MateriaEntity>> getAllMaterias(@PathVariable Long id) {
-        return service.getAllMaterias(id);
+        return ResponseEntity.ok(service.getAllMaterias(id));
     }
 }

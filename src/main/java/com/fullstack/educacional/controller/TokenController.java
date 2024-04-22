@@ -20,7 +20,7 @@ public class TokenController {
     private final TokenService tokenService;
     private static long TEMPO_EXPIRACAO = 36000L; // em segundos
 
-    @PostMapping("/login")
+    @PostMapping("login")
     public ResponseEntity<LoginResponse> gerarToken(
             @RequestBody LoginRequest loginRequest
     ){

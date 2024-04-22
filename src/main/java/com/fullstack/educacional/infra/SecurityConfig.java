@@ -40,8 +40,9 @@ public class SecurityConfig {
 
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.POST, "/login").permitAll() // permite os endpoints que tenham o texto que condiz com /login
-                        .requestMatchers(HttpMethod.POST, "/cadastro").permitAll()
+                        .requestMatchers(HttpMethod.POST, "login").permitAll() // permite os endpoints que tenham o texto que condiz com /login
+                        .requestMatchers(HttpMethod.POST, "cadastro").permitAll()
+                        .requestMatchers(HttpMethod.GET, "alunos").hasAuthority("SCOPE_ADM")
                         .anyRequest().authenticated() // pede autenticação para todos os endpoints que não foram permitidos
                 )
                 .csrf(AbstractHttpConfigurer::disable) // desabilita o CSRF, ele bloqueia alguns tipos de chamadas por padrão
