@@ -1,6 +1,6 @@
 package com.fullstack.educacional.controller;
 
-import com.fullstack.educacional.controller.dto.request.InserirUsuarioRequest;
+import com.fullstack.educacional.controller.dto.request.UsuarioRequest;
 import com.fullstack.educacional.service.UsuarioServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,10 +16,10 @@ public class CadastroController {
 
     @PostMapping("/cadastro")
     public ResponseEntity<String> novoUsuario(
-            @Validated @RequestBody InserirUsuarioRequest inserirUsuarioRequest
+            @Validated @RequestBody UsuarioRequest usuarioRequest
     ) {
 
-        usuarioService.cadastraNovoUsuario(inserirUsuarioRequest);
+        usuarioService.cadastraNovoUsuario(usuarioRequest);
 
         return ResponseEntity.ok("Usuario Salvo!");
     }

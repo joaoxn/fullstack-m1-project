@@ -1,6 +1,6 @@
 package com.fullstack.educacional.controller.dto.request;
 
-public record InserirUsuarioRequest(
+public record UsuarioRequest(
         String nomeUsuario,
         String senha,
         String nomePapel

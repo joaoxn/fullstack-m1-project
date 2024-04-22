@@ -1,18 +1,13 @@
 package com.fullstack.educacional.service;
 
-import com.fullstack.educacional.controller.dto.request.InserirUsuarioRequest;
+import com.fullstack.educacional.controller.dto.request.UsuarioRequest;
 import com.fullstack.educacional.datasource.entity.PapelEntity;
-import com.fullstack.educacional.datasource.entity.UsuarioEntity;
 import com.fullstack.educacional.datasource.entity.UsuarioEntity;
 import com.fullstack.educacional.datasource.repository.PapelRepository;
 import com.fullstack.educacional.datasource.repository.UsuarioRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
-
-import java.time.LocalDate;
-import java.util.List;
 
 @Service
 public class UsuarioServiceImpl extends GenericServiceImpl<UsuarioEntity, UsuarioRepository> implements GenericService<UsuarioEntity> {
@@ -59,10 +54,10 @@ public class UsuarioServiceImpl extends GenericServiceImpl<UsuarioEntity, Usuari
     }
 
     public void cadastraNovoUsuario(
-            @RequestBody InserirUsuarioRequest inserirUsuarioRequest
+            @RequestBody UsuarioRequest usuarioRequest
     ) {
         boolean usuarioExsite = usuarioRepository
-                .findByNome(inserirUsuarioRequest.nomeUsuario())
+                .findByNome(usuarioRequest.nomeUsuario())
                 .isPresent(); // retorna um true se a entidade procurada existir, caso o contrário, retorna false
 
         if (usuarioExsite) {
@@ -70,12 +65,12 @@ public class UsuarioServiceImpl extends GenericServiceImpl<UsuarioEntity, Usuari
         }
 
         UsuarioEntity usuario = new UsuarioEntity();
-        usuario.setNome(inserirUsuarioRequest.nomeUsuario());
+        usuario.setNome(usuarioRequest.nomeUsuario());
         usuario.setSenha(
-                bCryptEncoder.encode(inserirUsuarioRequest.senha()) // codificar a senha
+                bCryptEncoder.encode(usuarioRequest.senha()) // codificar a senha
         );
         usuario.setPapel(
-                papelRepository.findByNome(inserirUsuarioRequest.nomePapel())
+                papelRepository.findByNome(usuarioRequest.nomePapel())
                         .orElseThrow(() -> new RuntimeException("Perfil inválido ou inexistente"))
         );
 
