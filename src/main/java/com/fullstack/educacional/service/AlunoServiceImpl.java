@@ -15,11 +15,25 @@ import java.util.List;
 public class AlunoServiceImpl extends GenericServiceImpl<AlunoEntity, AlunoEntity, AlunoRepository> implements GenericService<AlunoEntity, AlunoEntity> {
     private final AlunoRepository repository;
     private final NotaRepository notaRepository;
+    private final TokenService tokenService;
 
-    public AlunoServiceImpl(AlunoRepository repository, NotaRepository notaRepository) {
+    public AlunoServiceImpl(
+            AlunoRepository repository,
+            NotaRepository notaRepository,
+            TokenService tokenService
+    ) {
         super(repository, new AlunoEntity());
         this.repository = repository;
         this.notaRepository = notaRepository;
+        this.tokenService = tokenService;
+    }
+
+    @Override
+    public AlunoEntity get(Long id) {
+        validarPermissaoAluno(id, , );
+        return repository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Entidade não encontrada com ID: " + id));
     }
 
     @Override
@@ -60,5 +74,18 @@ public class AlunoServiceImpl extends GenericServiceImpl<AlunoEntity, AlunoEntit
     public PontuacaoResponse getPontuacaoTotal(Long alunoId) {
         return null;
         //TODO: criar lógica para pontuação total
+    }
+
+    public void validarPermissaoAluno(Long id, String token, AlunoEntity alunoEntity) {
+        Long usuarioId = Long.valueOf(
+                tokenService.buscaCampo(token, "sub")
+        );
+        String usuarioScope = String.valueOf(
+                tokenService.buscaCampo(token, "scope")
+        );
+
+        if (usuarioScope.equals("ALUNO") && !usuarioId.equals(alunoEntity.getUsuario().getId())) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Você não tem acesso a essas informações por não serem suas. (Tentou acessar aluno com id: "+ id +")");
+        }
     }
 }

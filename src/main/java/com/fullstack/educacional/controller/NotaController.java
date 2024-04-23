@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@RestController
+@RequestMapping("notas")
 @RequiredArgsConstructor
 public class NotaController {
     private final GenericService<NotaEntity, NotaRequest> service;
