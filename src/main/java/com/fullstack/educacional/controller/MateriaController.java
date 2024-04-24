@@ -6,6 +6,7 @@ import com.fullstack.educacional.datasource.entity.MateriaEntity;
 import com.fullstack.educacional.datasource.repository.MateriaRepository;
 import com.fullstack.educacional.service.GenericService;
 import com.fullstack.educacional.service.GenericServiceImpl;
+import com.fullstack.educacional.service.MateriaServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,8 +17,7 @@ import java.util.List;
 @RequestMapping("materias")
 @RequiredArgsConstructor
 public class MateriaController {
-
-    private MateriaService service;
+    private final MateriaServiceImpl service;
 
     @GetMapping("{id}")
     public ResponseEntity<MateriaEntity> get(@PathVariable Long id) {
@@ -39,7 +39,7 @@ public class MateriaController {
             @PathVariable Long id,
             @RequestBody MateriaRequest materiaRequest
     ) {
-        return ResponseEntity.ok(service.create(materiaRequest));
+        return ResponseEntity.ok(service.alter(id, materiaRequest));
     }
 
     @DeleteMapping("{id}")

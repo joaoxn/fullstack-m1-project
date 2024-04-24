@@ -19,7 +19,6 @@ import java.time.Instant;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-
 public class TokenService {
 
     private final BCryptPasswordEncoder bCryptEncoder; // decifrar senhas
@@ -71,6 +70,7 @@ public class TokenService {
 
 
     public String buscaCampo(String token, String claim) {
+            token = token.substring(token.indexOf(' ')+1);
         return jwtDencoder
                 .decode(token) // decifra o token
                 .getClaims() // busca um campo especifico do token

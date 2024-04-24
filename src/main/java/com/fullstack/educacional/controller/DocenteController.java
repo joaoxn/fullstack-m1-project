@@ -31,7 +31,10 @@ public class DocenteController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<DocenteEntity> put(@PathVariable Long id, @RequestBody DocenteRequest docenteRequest) {
+    public ResponseEntity<DocenteEntity> put(
+            @PathVariable Long id,
+            @RequestBody DocenteRequest docenteRequest
+    ) {
         return ResponseEntity.ok(service.alter(id, docenteRequest));
     }
 

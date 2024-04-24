@@ -34,7 +34,7 @@ public class UsuarioServiceImpl extends GenericServiceImpl<UsuarioEntity, Usuari
 
         PapelEntity papel = null;
         try {
-            papel = papelRepository.findByNome(data.nomePapel())
+            papel = papelRepository.findByNome(data.papel())
                     .orElseThrow();
         } catch (ResponseStatusException ignored) {}
         if (papel != null) {
