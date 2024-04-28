@@ -13,6 +13,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class AlunoServiceImpl extends GenericServiceImpl<AlunoEntity, AlunoRequest, AlunoRepository> implements GenericService<AlunoEntity, AlunoRequest> {
@@ -41,7 +42,17 @@ public class AlunoServiceImpl extends GenericServiceImpl<AlunoEntity, AlunoReque
         validarPermissaoAluno(id, token);
         return repository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "Entidade não encontrada com ID: " + id));
+                        HttpStatus.NOT_FOUND, "Aluno não encontrado com ID: " + id));
+    }
+
+    @Override
+    public AlunoEntity create(AlunoRequest alunoRequest) {
+        if (!usuarioRepository.findByLogin(alunoRequest.login())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND))
+                .getPapel().getNome().equals("ALUNO")) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tentou criar aluno com um usuário sem papel de ALUNO");
+        }
+        return repository.save(equalProperties(new AlunoEntity(), alunoRequest));
     }
 
     @Override
@@ -52,7 +63,7 @@ public class AlunoServiceImpl extends GenericServiceImpl<AlunoEntity, AlunoReque
         }
         TurmaEntity turma = null;
         try {
-            turma = turmaRepository.findByNome(data.nomeTurma())
+            turma = turmaRepository.findById(data.turmaId())
                     .orElseThrow();
         } catch (RuntimeException ignore) {}
         if (turma != null) {
@@ -83,7 +94,7 @@ public class AlunoServiceImpl extends GenericServiceImpl<AlunoEntity, AlunoReque
 
         return notaRepository.findAllByAluno(aluno)
                 .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "Nenhuma nota encontrada com aluno de nomeAluno: " + aluno.getNome()));
+                        HttpStatus.NOT_FOUND, "Nenhuma nota encontrada com aluno ["+ aluno.getId() +"] de nome: " + aluno.getNome()));
     }
 
     public PontuacaoResponse getPontuacaoTotal(Long alunoId) {

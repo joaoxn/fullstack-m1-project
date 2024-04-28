@@ -7,5 +7,5 @@ public interface GenericService<E, DTO> {
     List<E> getAll();
     E create(DTO entity);
     E alter(Long id, DTO entity);
-    void delete(Long id);
+    String delete(Long id);
 }

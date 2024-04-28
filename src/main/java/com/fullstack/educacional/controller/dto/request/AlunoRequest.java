@@ -5,7 +5,7 @@ import java.time.LocalDate;
 public record AlunoRequest(
         String nome,
         String login,
-        String nomeTurma,
+        Long turmaId,
         LocalDate dataNascimento
 ) {
 }
