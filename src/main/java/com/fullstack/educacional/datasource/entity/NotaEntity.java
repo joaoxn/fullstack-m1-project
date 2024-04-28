@@ -14,7 +14,7 @@ public class NotaEntity {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "aluno_id")
+    @JoinColumn(name = "aluno_id", nullable = false)
     private AlunoEntity aluno;
 
     @ManyToOne
@@ -22,9 +22,10 @@ public class NotaEntity {
     private DocenteEntity docente;
 
     @ManyToOne
-    @JoinColumn(name = "materia_id")
+    @JoinColumn(name = "materia_id", nullable = false)
     private MateriaEntity materia;
 
+    @Column(nullable = false)
     private Float valor;
 
     private LocalDate dataEntrada;

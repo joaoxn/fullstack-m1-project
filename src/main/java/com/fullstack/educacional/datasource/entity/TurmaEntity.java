@@ -20,10 +20,10 @@ public class TurmaEntity {
     private LocalDate dataEntrada;
 
     @ManyToOne
-    @JoinColumn(name = "professor_id")
+    @JoinColumn(name = "professor_id", nullable = false)
     private DocenteEntity docente;
 
     @ManyToOne
-    @JoinColumn(name = "curso_id")
+    @JoinColumn(name = "curso_id", nullable = false)
     private CursoEntity curso;
 }
