@@ -32,10 +32,9 @@ public class UsuarioServiceImpl extends GenericServiceImpl<UsuarioEntity, Usuari
 
     @Override
     public UsuarioEntity create(UsuarioRequest usuarioRequest) {
-        if(repository.findByLogin(usuarioRequest.login()).isPresent()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Usuário com login "+ usuarioRequest.login() +" já existe!");
-        }
-        return repository.save(equalProperties(new UsuarioEntity(), usuarioRequest));
+        validarUsuario(usuarioRequest, "todos");
+        UsuarioEntity usuario = equalProperties(new UsuarioEntity(), usuarioRequest);
+        return repository.save(usuario);
     }
 
     public UsuarioResponse getResponse(Long id) {
@@ -61,7 +60,9 @@ public class UsuarioServiceImpl extends GenericServiceImpl<UsuarioEntity, Usuari
         );
         UsuarioEntity usuario = repository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Não encontrado usuário com id: "+ id));
-        usuario.setSenha(senha);
+        UsuarioRequest request = new UsuarioRequest(null, senha, null);
+        validarUsuario(request, "senha");
+        usuario = equalProperties(usuario, request);
         return repository.save(usuario);
     }
 
@@ -79,12 +80,42 @@ public class UsuarioServiceImpl extends GenericServiceImpl<UsuarioEntity, Usuari
         PapelEntity papel = null;
         try {
             papel = papelRepository.findByNome(data.papel())
-                    .orElseThrow();
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         } catch (ResponseStatusException ignored) {}
         if (papel != null) {
             entity.setPapel(papel);
         }
 
         return entity;
+    }
+
+    public void validarUsuario(UsuarioRequest usuario, String opcao) {
+        switch(opcao) {
+            case "login":
+            if (usuario.login().length() < 3) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                        "Login do usuário é muito curto! Tamanho: " + usuario.login().length() + " caracteres (Mínimo: 3)");
+            }
+            break;
+            case "senha":
+            if (usuario.senha().length() < 3) {
+                throw new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST,
+                        "Senha do usuário é muito curta! Tamanho: " + usuario.senha().length() + " caracteres (Mínimo: 3)"
+                );
+            }
+            break;
+            case "jaExiste":
+            if (repository.findByLogin(usuario.login()).isPresent()) {
+                throw new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST,
+                        "Usuário com login " + usuario.login() + " já existe!"
+                );
+            }
+            default:
+                validarUsuario(usuario, "login");
+                validarUsuario(usuario, "senha");
+                validarUsuario(usuario, "jaExiste");
+        }
     }
 }
