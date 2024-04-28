@@ -30,6 +30,14 @@ public class UsuarioServiceImpl extends GenericServiceImpl<UsuarioEntity, Usuari
         this.tokenService = tokenService;
     }
 
+    @Override
+    public UsuarioEntity create(UsuarioRequest usuarioRequest) {
+        if(repository.findByLogin(usuarioRequest.login()).isPresent()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Usuário com login "+ usuarioRequest.login() +" já existe!");
+        }
+        return repository.save(equalProperties(new UsuarioEntity(), usuarioRequest));
+    }
+
     public UsuarioResponse getResponse(Long id) {
         UsuarioEntity usuario = repository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(
