@@ -3,6 +3,7 @@ package com.fullstack.educacional.controller;
 import com.fullstack.educacional.controller.dto.request.UsuarioRequest;
 import com.fullstack.educacional.controller.dto.response.UsuarioResponse;
 import com.fullstack.educacional.datasource.entity.PapelEntity;
+import com.fullstack.educacional.datasource.entity.UsuarioEntity;
 import com.fullstack.educacional.datasource.repository.PapelRepository;
 import com.fullstack.educacional.service.UsuarioServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -42,6 +43,11 @@ public class CadastroController {
     @GetMapping("usuarios/{id}")
     public ResponseEntity<UsuarioResponse> getUsuario(@PathVariable Long id) {
         return ResponseEntity.ok(usuarioService.getResponse(id));
+    }
+
+    @PutMapping("usuarios/senha")
+    public ResponseEntity<UsuarioEntity> alterUsuarioSenha(@RequestHeader(name = "Authorization") String token, @RequestBody String senha) {
+        return ResponseEntity.ok(usuarioService.alterSenha(token, senha));
     }
 
     @DeleteMapping("usuarios/{id}")

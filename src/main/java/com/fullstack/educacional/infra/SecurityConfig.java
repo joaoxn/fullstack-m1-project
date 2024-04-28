@@ -41,6 +41,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.POST, "/login").permitAll() // permite os endpoints que tenham o texto que condiz com /login
+                        .requestMatchers(HttpMethod.PUT, "/usuarios/senha").permitAll()
                         // Acesso de ALUNO+ => Todos os endpoints que são GET e começando em alunos/{id}
                         .requestMatchers(req ->
                                 req.getRequestURI().startsWith("/alunos/") &&

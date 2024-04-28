@@ -6,6 +6,7 @@ import com.fullstack.educacional.datasource.entity.PapelEntity;
 import com.fullstack.educacional.datasource.entity.UsuarioEntity;
 import com.fullstack.educacional.datasource.repository.PapelRepository;
 import com.fullstack.educacional.datasource.repository.UsuarioRepository;
+import org.antlr.v4.runtime.Token;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,12 +20,14 @@ public class UsuarioServiceImpl extends GenericServiceImpl<UsuarioEntity, Usuari
     private final BCryptPasswordEncoder bCryptEncoder;
     private final PapelRepository papelRepository;
     private final UsuarioRepository repository;
+    private final TokenService tokenService;
 
-    public UsuarioServiceImpl(UsuarioRepository repository, PapelRepository papelRepository, BCryptPasswordEncoder bCryptEncoder) {
+    public UsuarioServiceImpl(UsuarioRepository repository, PapelRepository papelRepository, BCryptPasswordEncoder bCryptEncoder, TokenService tokenService) {
         super(repository, new UsuarioEntity());
         this.papelRepository = papelRepository;
         this.bCryptEncoder = bCryptEncoder;
         this.repository = repository;
+        this.tokenService = tokenService;
     }
 
     public UsuarioResponse getResponse(Long id) {
@@ -42,6 +45,16 @@ public class UsuarioServiceImpl extends GenericServiceImpl<UsuarioEntity, Usuari
             usuarioResponseList.add(usuarioResponse);
         }
         return usuarioResponseList;
+    }
+
+    public UsuarioEntity alterSenha(String token, String senha) {
+        Long id = Long.valueOf(
+                tokenService.buscaCampo(token, "sub")
+        );
+        UsuarioEntity usuario = repository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Não encontrado usuário com id: "+ id));
+        usuario.setSenha(senha);
+        return repository.save(usuario);
     }
 
     public UsuarioEntity equalProperties(UsuarioEntity entity, UsuarioRequest data) {
