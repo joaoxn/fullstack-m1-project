@@ -1,8 +1,6 @@
 package com.fullstack.educacional.service;
 
-import com.fullstack.educacional.controller.dto.request.AlunoRequest;
 import com.fullstack.educacional.controller.dto.request.DocenteRequest;
-import com.fullstack.educacional.datasource.entity.AlunoEntity;
 import com.fullstack.educacional.datasource.entity.DocenteEntity;
 import com.fullstack.educacional.datasource.entity.UsuarioEntity;
 import com.fullstack.educacional.datasource.repository.DocenteRepository;
