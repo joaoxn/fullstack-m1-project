@@ -1,7 +1,6 @@
 package com.fullstack.educacional.service;
 
 import com.fullstack.educacional.controller.dto.request.UsuarioRequest;
-import com.fullstack.educacional.controller.dto.response.UsuarioResponse;
 import com.fullstack.educacional.datasource.entity.PapelEntity;
 import com.fullstack.educacional.datasource.entity.UsuarioEntity;
 import com.fullstack.educacional.datasource.repository.PapelRepository;
@@ -19,29 +18,41 @@ public class UsuarioServiceImpl extends GenericServiceImpl<UsuarioEntity, Usuari
     private final BCryptPasswordEncoder bCryptEncoder;
     private final PapelRepository papelRepository;
     private final UsuarioRepository repository;
+    private final TokenService tokenService;
 
-    public UsuarioServiceImpl(UsuarioRepository repository, PapelRepository papelRepository, BCryptPasswordEncoder bCryptEncoder) {
+    public UsuarioServiceImpl(UsuarioRepository repository, PapelRepository papelRepository, BCryptPasswordEncoder bCryptEncoder, TokenService tokenService) {
         super(repository, new UsuarioEntity());
         this.papelRepository = papelRepository;
         this.bCryptEncoder = bCryptEncoder;
         this.repository = repository;
+        this.tokenService = tokenService;
     }
 
-    public UsuarioResponse getResponse(Long id) {
-        UsuarioEntity usuario = repository.findById(id)
+    @Override
+    public UsuarioEntity create(UsuarioRequest usuarioRequest) {
+        validarUsuario(usuarioRequest, "todos");
+        UsuarioEntity usuario = equalProperties(new UsuarioEntity(), usuarioRequest);
+        return repository.save(usuario);
+    }
+
+    @Override
+    public UsuarioEntity get(Long id) {
+        return repository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Entidade não encontrada com ID: " + id));
-        return new UsuarioResponse(usuario.getId(), usuario.getLogin(), usuario.getPapel());
     }
 
-    public List<UsuarioResponse> getAllResponse() {
-        List<UsuarioEntity> usuarios = repository.findAll();
-        List<UsuarioResponse> usuarioResponseList = new ArrayList<>();
-        for(UsuarioEntity usuario : usuarios) {
-            UsuarioResponse usuarioResponse = new UsuarioResponse(usuario.getId(), usuario.getLogin(), usuario.getPapel());
-            usuarioResponseList.add(usuarioResponse);
-        }
-        return usuarioResponseList;
+    public String alterSenha(String token, String senha) {
+        Long id = Long.valueOf(
+                tokenService.buscaCampo(token, "sub")
+        );
+        UsuarioEntity usuario = repository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Não encontrado usuário com id: "+ id));
+        UsuarioRequest request = new UsuarioRequest(null, senha, null);
+        validarUsuario(request, "senha");
+        usuario = equalProperties(usuario, request);
+        repository.save(usuario);
+        return "Senha do usuário com login \""+ usuario.getLogin() +"\" alterada com sucesso!";
     }
 
     public UsuarioEntity equalProperties(UsuarioEntity entity, UsuarioRequest data) {
@@ -58,12 +69,43 @@ public class UsuarioServiceImpl extends GenericServiceImpl<UsuarioEntity, Usuari
         PapelEntity papel = null;
         try {
             papel = papelRepository.findByNome(data.papel())
-                    .orElseThrow();
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         } catch (ResponseStatusException ignored) {}
         if (papel != null) {
             entity.setPapel(papel);
         }
 
         return entity;
+    }
+
+    public void validarUsuario(UsuarioRequest usuario, String opcao) {
+        switch(opcao) {
+            case "login":
+            if (usuario.login().length() < 3) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                        "Login do usuário é muito curto! Tamanho: " + usuario.login().length() + " caracteres (Mínimo: 3)");
+            }
+            break;
+            case "senha":
+            if (usuario.senha().length() < 3) {
+                throw new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST,
+                        "Senha do usuário é muito curta! Tamanho: " + usuario.senha().length() + " caracteres (Mínimo: 3)"
+                );
+            }
+            break;
+            case "jaExiste":
+            if (repository.findByLogin(usuario.login()).isPresent()) {
+                throw new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST,
+                        "Usuário com login " + usuario.login() + " já existe!"
+                );
+            }
+            break;
+            default:
+                validarUsuario(usuario, "login");
+                validarUsuario(usuario, "senha");
+                validarUsuario(usuario, "jaExiste");
+        }
     }
 }

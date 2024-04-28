@@ -1,5 +1,6 @@
 package com.fullstack.educacional.datasource.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fullstack.educacional.controller.dto.request.LoginRequest;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -20,6 +21,7 @@ public class UsuarioEntity implements Serializable {
     @Column(nullable = false)
     private String login;
 
+    @JsonIgnore
     @Column(nullable = false)
     private String senha;
 

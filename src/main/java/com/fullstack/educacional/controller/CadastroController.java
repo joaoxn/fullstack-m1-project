@@ -1,8 +1,8 @@
 package com.fullstack.educacional.controller;
 
 import com.fullstack.educacional.controller.dto.request.UsuarioRequest;
-import com.fullstack.educacional.controller.dto.response.UsuarioResponse;
 import com.fullstack.educacional.datasource.entity.PapelEntity;
+import com.fullstack.educacional.datasource.entity.UsuarioEntity;
 import com.fullstack.educacional.datasource.repository.PapelRepository;
 import com.fullstack.educacional.service.UsuarioServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -22,26 +22,28 @@ public class CadastroController {
     public ResponseEntity<String> novoUsuario(
             @Validated @RequestBody UsuarioRequest usuarioRequest
     ) {
-
-        usuarioService.create(usuarioRequest);
-
-        return ResponseEntity.ok("Usuario Salvo!");
+        return ResponseEntity.ok("Usuário Salvo! ID do usuário: "+ usuarioService.create(usuarioRequest).getId());
     }
 
     @PostMapping("papel")
     public ResponseEntity<String> papel(@RequestBody PapelEntity papel) {
         papelRepository.save(papel);
-        return ResponseEntity.ok("success");
+        return ResponseEntity.ok("Papel salvo com sucesso!");
     }
 
     @GetMapping("usuarios")
-    public ResponseEntity<List<UsuarioResponse>> getUsuarios() {
-        return ResponseEntity.ok(usuarioService.getAllResponse());
+    public ResponseEntity<List<UsuarioEntity>> getUsuarios() {
+        return ResponseEntity.ok(usuarioService.getAll());
     }
 
     @GetMapping("usuarios/{id}")
-    public ResponseEntity<UsuarioResponse> getUsuario(@PathVariable Long id) {
-        return ResponseEntity.ok(usuarioService.getResponse(id));
+    public ResponseEntity<UsuarioEntity> getUsuario(@PathVariable Long id) {
+        return ResponseEntity.ok(usuarioService.get(id));
+    }
+
+    @PutMapping("usuarios/senha")
+    public ResponseEntity<String> alterUsuarioSenha(@RequestHeader(name = "Authorization") String token, @RequestBody String senha) {
+        return ResponseEntity.ok(usuarioService.alterSenha(token, senha));
     }
 
     @DeleteMapping("usuarios/{id}")

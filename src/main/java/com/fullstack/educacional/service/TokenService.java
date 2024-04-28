@@ -6,6 +6,7 @@ import com.fullstack.educacional.datasource.entity.UsuarioEntity;
 import com.fullstack.educacional.datasource.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
@@ -13,6 +14,7 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
 
@@ -23,7 +25,7 @@ public class TokenService {
 
     private final BCryptPasswordEncoder bCryptEncoder; // decifrar senhas
     private final JwtEncoder jwtEncoder; // codificar um JWT
-    private final JwtDecoder jwtDencoder; // decodifica um JWT
+    private final JwtDecoder jwtDecoder; // decodifica um JWT
     private final UsuarioRepository usuarioRepository;
 
     private static long TEMPO_EXPIRACAO = 36000L; //contante de tempo de expiração em segundos
@@ -37,13 +39,13 @@ public class TokenService {
                 .orElseThrow(                                  // caso usuario não exista gera um erro
                         ()->{
                             log.error("Erro, usuário não existe");
-                            return new RuntimeException("Erro, usuário não existe");
+                            return new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário com login "+ loginRequest.login() +"não encontrado");
                         }
                 );
 
         if(!usuarioEntity.senhaValida(loginRequest, bCryptEncoder)){ // valida se a senha recebida é a mesma que foi salva com BCrypt
-            log.error("Erro, senha incorreta");                      // caso senha não bata, gera um erro
-            throw new RuntimeException("Erro, senha incorreta");
+            log.error("Senha incorreta");                      // caso senha não bata, gera um erro
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Senha incorreta");
         }
 
         Instant now = Instant.now();
@@ -71,7 +73,7 @@ public class TokenService {
 
     public String buscaCampo(String token, String claim) {
             token = token.substring(token.indexOf(' ')+1);
-        return jwtDencoder
+        return jwtDecoder
                 .decode(token) // decifra o token
                 .getClaims() // busca um campo especifico do token
                 .get(claim)    // definindo o campo a ser buscado
