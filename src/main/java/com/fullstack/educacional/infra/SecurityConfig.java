@@ -43,15 +43,13 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/login").permitAll() // permite os endpoints que tenham o texto que condiz com /login
                         .requestMatchers(HttpMethod.PUT, "/usuarios/senha").permitAll()
                         // Acesso de ALUNO+ => Todos os endpoints que são GET e começando em alunos/{id}
-                        .requestMatchers(req ->
-                                req.getRequestURI().startsWith("/alunos/") &&
-                                        req.getMethod().equals(HttpMethod.GET.toString()))
+                        .requestMatchers(HttpMethod.GET, "/alunos/**")
                         .hasAnyAuthority("SCOPE_ALUNO", "SCOPE_PROFESSOR", "SCOPE_PEDAGOGICO", "SCOPE_ADM")
                         // Acesso de PROFESSOR+ => Todos os endpoints que não são DELETE e começando em notas ou igual a alunos/{id}/notas
                         .requestMatchers(req -> (
                                 req.getRequestURI().startsWith("/notas") ||
-                                        req.getRequestURI().startsWith("/alunos/") ||
-                                        req.getRequestURI().endsWith("/notas")
+                                        req.getRequestURI().endsWith("/notas") ||
+                                        req.getRequestURI().endsWith("/pontuacao")
                         ) && !req.getMethod().equals(HttpMethod.DELETE.toString()))
                         .hasAnyAuthority("SCOPE_PROFESSOR", "SCOPE_ADM")
                         // Acesso de RECRUITER+ => Todos os endpoints que não são DELETE e começando em docentes

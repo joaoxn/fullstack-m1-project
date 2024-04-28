@@ -25,9 +25,9 @@ public class CursoServiceImpl extends GenericServiceImpl<CursoEntity, CursoReque
 
     @Override
     public CursoEntity equalProperties(CursoEntity entity, CursoRequest data) {
-        String Nome = data.nome();
-        if (Nome != null) {
-            entity.setNome(Nome);
+        String nome = data.nome();
+        if (nome != null) {
+            entity.setNome(nome);
         }
 
         if (entity.getDataEntrada() == null) {
@@ -44,6 +44,6 @@ public class CursoServiceImpl extends GenericServiceImpl<CursoEntity, CursoReque
 
         return materiaRepository.findAllByCurso(curso)
                 .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "Nenhuma matéria encontrada com curso de nomeAluno: " + curso.getNome()));
+                        HttpStatus.NOT_FOUND, "Nenhuma matéria encontrada com curso ["+ curso.getId() +"] de nome: " + curso.getNome()));
     }
 }

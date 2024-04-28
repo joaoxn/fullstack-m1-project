@@ -10,19 +10,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.Instant;
-
 @RestController
 @RequiredArgsConstructor
 @Slf4j
 public class TokenController {
     private final TokenService tokenService;
-    private static long TEMPO_EXPIRACAO = 36000L; // em segundos
 
     @PostMapping("login")
-    public ResponseEntity<LoginResponse> gerarToken(
-            @RequestBody LoginRequest loginRequest
-    ){
+    public ResponseEntity<LoginResponse> gerarToken(@RequestBody LoginRequest loginRequest){
 
         LoginResponse response = tokenService.gerarToken(loginRequest);
 

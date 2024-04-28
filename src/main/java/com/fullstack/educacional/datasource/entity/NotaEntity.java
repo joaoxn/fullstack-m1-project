@@ -29,5 +29,5 @@ public class NotaEntity {
 
     private Float valor;
 
-    private LocalDate data = LocalDate.now();
+    private LocalDate dataEntrada;
 }

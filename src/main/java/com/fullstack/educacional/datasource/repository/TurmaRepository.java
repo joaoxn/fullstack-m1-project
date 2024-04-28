@@ -9,5 +9,4 @@ import java.util.Optional;
 
 @Repository
 public interface TurmaRepository extends JpaRepository<TurmaEntity, Long> {
-    Optional<TurmaEntity> findByNome(String nome);
 }

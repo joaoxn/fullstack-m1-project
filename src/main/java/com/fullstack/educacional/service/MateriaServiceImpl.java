@@ -5,13 +5,11 @@ import com.fullstack.educacional.datasource.entity.CursoEntity;
 import com.fullstack.educacional.datasource.entity.MateriaEntity;
 import com.fullstack.educacional.datasource.repository.CursoRepository;
 import com.fullstack.educacional.datasource.repository.MateriaRepository;
-import com.fullstack.educacional.datasource.repository.MateriaRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Service
 public class MateriaServiceImpl extends GenericServiceImpl<MateriaEntity, MateriaRequest, MateriaRepository> implements GenericService<MateriaEntity, MateriaRequest> {
@@ -31,7 +29,7 @@ public class MateriaServiceImpl extends GenericServiceImpl<MateriaEntity, Materi
 
         CursoEntity curso = null;
         try {
-            curso = cursoRepository.findByNome(data.nomeCurso())
+            curso = cursoRepository.findById(data.cursoId())
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         } catch (ResponseStatusException ignore) {}
         if (curso != null) {
