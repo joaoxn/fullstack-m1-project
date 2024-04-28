@@ -1,7 +1,9 @@
 package com.fullstack.educacional.service;
 
 import com.fullstack.educacional.controller.dto.request.MateriaRequest;
+import com.fullstack.educacional.datasource.entity.CursoEntity;
 import com.fullstack.educacional.datasource.entity.MateriaEntity;
+import com.fullstack.educacional.datasource.repository.CursoRepository;
 import com.fullstack.educacional.datasource.repository.MateriaRepository;
 import com.fullstack.educacional.datasource.repository.MateriaRepository;
 import org.springframework.http.HttpStatus;
@@ -13,21 +15,32 @@ import java.util.List;
 
 @Service
 public class MateriaServiceImpl extends GenericServiceImpl<MateriaEntity, MateriaRequest, MateriaRepository> implements GenericService<MateriaEntity, MateriaRequest> {
+    private final CursoRepository cursoRepository;
 
-    public MateriaServiceImpl(MateriaRepository repository) {
+    public MateriaServiceImpl(MateriaRepository repository, CursoRepository cursoRepository) {
         super(repository, new MateriaEntity());
+        this.cursoRepository = cursoRepository;
     }
 
     @Override
     public MateriaEntity equalProperties(MateriaEntity entity, MateriaRequest data) {
-//        String Nome = data.nome();
-//        if (Nome != null) {
-//            entity.setNome(Nome);
-//        }
-//
-//        if (entity.getDataEntrada() == null) {
-//            entity.setDataEntrada(LocalDate.now());
-//        } TODO
+        String nome = data.nome();
+        if (nome != null) {
+            entity.setNome(nome);
+        }
+
+        CursoEntity curso = null;
+        try {
+            curso = cursoRepository.findByNome(data.nomeCurso())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        } catch (ResponseStatusException ignore) {}
+        if (curso != null) {
+            entity.setCurso(curso);
+        }
+
+        if (entity.getDataEntrada() == null) {
+            entity.setDataEntrada(LocalDate.now());
+        }
 
         return entity;
     }

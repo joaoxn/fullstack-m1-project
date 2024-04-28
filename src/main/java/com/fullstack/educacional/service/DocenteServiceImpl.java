@@ -29,7 +29,7 @@ public class DocenteServiceImpl extends GenericServiceImpl<DocenteEntity, Docent
 
         UsuarioEntity usuario = null;
         try {
-            usuario = usuarioRepository.findByLogin(data.loginUsuario())
+            usuario = usuarioRepository.findByLogin(data.login())
                     .orElseThrow();
         } catch (ResponseStatusException ignored) {}
         if (usuario != null) {
