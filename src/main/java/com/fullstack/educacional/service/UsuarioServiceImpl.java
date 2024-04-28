@@ -1,12 +1,10 @@
 package com.fullstack.educacional.service;
 
 import com.fullstack.educacional.controller.dto.request.UsuarioRequest;
-import com.fullstack.educacional.controller.dto.response.UsuarioResponse;
 import com.fullstack.educacional.datasource.entity.PapelEntity;
 import com.fullstack.educacional.datasource.entity.UsuarioEntity;
 import com.fullstack.educacional.datasource.repository.PapelRepository;
 import com.fullstack.educacional.datasource.repository.UsuarioRepository;
-import org.antlr.v4.runtime.Token;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -37,24 +35,14 @@ public class UsuarioServiceImpl extends GenericServiceImpl<UsuarioEntity, Usuari
         return repository.save(usuario);
     }
 
-    public UsuarioResponse getResponse(Long id) {
-        UsuarioEntity usuario = repository.findById(id)
+    @Override
+    public UsuarioEntity get(Long id) {
+        return repository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Entidade não encontrada com ID: " + id));
-        return new UsuarioResponse(usuario.getId(), usuario.getLogin(), usuario.getPapel());
     }
 
-    public List<UsuarioResponse> getAllResponse() {
-        List<UsuarioEntity> usuarios = repository.findAll();
-        List<UsuarioResponse> usuarioResponseList = new ArrayList<>();
-        for(UsuarioEntity usuario : usuarios) {
-            UsuarioResponse usuarioResponse = new UsuarioResponse(usuario.getId(), usuario.getLogin(), usuario.getPapel());
-            usuarioResponseList.add(usuarioResponse);
-        }
-        return usuarioResponseList;
-    }
-
-    public UsuarioEntity alterSenha(String token, String senha) {
+    public String alterSenha(String token, String senha) {
         Long id = Long.valueOf(
                 tokenService.buscaCampo(token, "sub")
         );
@@ -63,7 +51,8 @@ public class UsuarioServiceImpl extends GenericServiceImpl<UsuarioEntity, Usuari
         UsuarioRequest request = new UsuarioRequest(null, senha, null);
         validarUsuario(request, "senha");
         usuario = equalProperties(usuario, request);
-        return repository.save(usuario);
+        repository.save(usuario);
+        return "Senha do usuário com login \""+ usuario.getLogin() +"\" alterada com sucesso!";
     }
 
     public UsuarioEntity equalProperties(UsuarioEntity entity, UsuarioRequest data) {
@@ -112,6 +101,7 @@ public class UsuarioServiceImpl extends GenericServiceImpl<UsuarioEntity, Usuari
                         "Usuário com login " + usuario.login() + " já existe!"
                 );
             }
+            break;
             default:
                 validarUsuario(usuario, "login");
                 validarUsuario(usuario, "senha");
