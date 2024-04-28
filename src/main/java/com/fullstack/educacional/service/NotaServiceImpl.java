@@ -6,6 +6,7 @@ import com.fullstack.educacional.datasource.repository.AlunoRepository;
 import com.fullstack.educacional.datasource.repository.DocenteRepository;
 import com.fullstack.educacional.datasource.repository.MateriaRepository;
 import com.fullstack.educacional.datasource.repository.NotaRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;

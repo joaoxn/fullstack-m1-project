@@ -26,7 +26,8 @@ public abstract class GenericServiceImpl<E, DTO, R extends JpaRepository<E, Long
     }
 
     public E create(DTO entity) {
-        return repository.save(equalProperties(newEntity, entity));
+        E entitySave = equalProperties(newEntity, entity);
+        return repository.save(entitySave);
     }
 
     public E alter(Long id, DTO data) {
