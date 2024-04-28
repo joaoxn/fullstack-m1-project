@@ -13,7 +13,7 @@ import java.util.List;
 @RequestMapping("docentes")
 @RequiredArgsConstructor
 public class DocenteController {
-    private DocenteServiceImpl service;
+    private final DocenteServiceImpl service;
 
     @GetMapping("{id}")
     public ResponseEntity<DocenteEntity> get(Long id) {

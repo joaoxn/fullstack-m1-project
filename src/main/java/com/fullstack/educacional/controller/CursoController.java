@@ -17,7 +17,7 @@ import java.util.List;
 @RequestMapping("cursos")
 @RequiredArgsConstructor
 public class CursoController {
-    private CursoServiceImpl service;
+    private final CursoServiceImpl service;
 
     @GetMapping("{id}")
     public ResponseEntity<CursoEntity> get(@PathVariable Long id) {
