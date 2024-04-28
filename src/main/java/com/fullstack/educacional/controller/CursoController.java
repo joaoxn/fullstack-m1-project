@@ -39,7 +39,7 @@ public class CursoController {
             @PathVariable Long id,
             @RequestBody CursoRequest cursoRequest
     ) {
-        return ResponseEntity.ok(service.create(cursoRequest));
+        return ResponseEntity.ok(service.alter(id, cursoRequest));
     }
 
     @DeleteMapping("{id}")

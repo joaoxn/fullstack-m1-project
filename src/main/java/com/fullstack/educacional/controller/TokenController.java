@@ -16,7 +16,6 @@ import java.time.Instant;
 @RequiredArgsConstructor
 @Slf4j
 public class TokenController {
-
     private final TokenService tokenService;
     private static long TEMPO_EXPIRACAO = 36000L; // em segundos
 

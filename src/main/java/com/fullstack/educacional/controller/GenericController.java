@@ -33,7 +33,7 @@ public class GenericController<E, DTO, S extends GenericService<E, DTO>> {
             @PathVariable Long id,
             @RequestBody DTO request
     ) {
-        return ResponseEntity.ok(service.create(request));
+        return ResponseEntity.ok(service.alter(id, request));
     }
 
     @DeleteMapping("{id}")

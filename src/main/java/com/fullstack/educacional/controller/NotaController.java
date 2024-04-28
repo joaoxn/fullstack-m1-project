@@ -3,6 +3,7 @@ package com.fullstack.educacional.controller;
 import com.fullstack.educacional.controller.dto.request.NotaRequest;
 import com.fullstack.educacional.datasource.entity.NotaEntity;
 import com.fullstack.educacional.service.GenericService;
+import com.fullstack.educacional.service.NotaServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +14,7 @@ import java.util.List;
 @RequestMapping("notas")
 @RequiredArgsConstructor
 public class NotaController {
-    private final GenericService<NotaEntity, NotaRequest> service;
+    private final NotaServiceImpl service;
 
     @GetMapping("{id}")
     public ResponseEntity<NotaEntity> get(@PathVariable Long id) {
@@ -35,7 +36,7 @@ public class NotaController {
             @PathVariable Long id,
             @RequestBody NotaRequest request
     ) {
-        return ResponseEntity.ok(service.create(request));
+        return ResponseEntity.ok(service.alter(id, request));
     }
 
     @DeleteMapping("{id}")

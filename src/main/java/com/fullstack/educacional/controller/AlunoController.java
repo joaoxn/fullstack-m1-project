@@ -1,5 +1,6 @@
 package com.fullstack.educacional.controller;
 
+import com.fullstack.educacional.controller.dto.request.AlunoRequest;
 import com.fullstack.educacional.controller.dto.response.PontuacaoResponse;
 import com.fullstack.educacional.datasource.entity.AlunoEntity;
 import com.fullstack.educacional.datasource.entity.NotaEntity;
@@ -17,8 +18,8 @@ public class AlunoController {
     private final AlunoServiceImpl service;
 
     @GetMapping("{id}")
-    public ResponseEntity<AlunoEntity> get(@PathVariable Long id) {
-        return ResponseEntity.ok(service.get(id));
+    public ResponseEntity<AlunoEntity> get(@PathVariable Long id, @RequestHeader(name = "Authorization") String token) {
+        return ResponseEntity.ok(service.get(id, token));
     }
 
     @GetMapping
@@ -27,12 +28,12 @@ public class AlunoController {
     }
 
     @PostMapping
-    public ResponseEntity<AlunoEntity> post(@RequestBody AlunoEntity alunoRequest) {
+    public ResponseEntity<AlunoEntity> post(@RequestBody AlunoRequest alunoRequest) {
         return ResponseEntity.ok(service.create(alunoRequest));
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<AlunoEntity> put(@PathVariable Long id, @RequestBody AlunoEntity alunoRequest) {
+    public ResponseEntity<AlunoEntity> put(@PathVariable Long id, @RequestBody AlunoRequest alunoRequest) {
         return ResponseEntity.ok(service.alter(id, alunoRequest));
     }
 

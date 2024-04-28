@@ -23,6 +23,6 @@ public class AlunoEntity {
     private UsuarioEntity usuario;
 
     @ManyToOne
-    @JoinColumn(name = "turma_id", nullable = false)
+    @JoinColumn(name = "turma_id")
     private TurmaEntity turma;
 }
