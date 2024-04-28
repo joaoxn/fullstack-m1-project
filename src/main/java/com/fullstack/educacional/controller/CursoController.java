@@ -3,11 +3,8 @@ package com.fullstack.educacional.controller;
 import com.fullstack.educacional.controller.dto.request.CursoRequest;
 import com.fullstack.educacional.datasource.entity.CursoEntity;
 import com.fullstack.educacional.datasource.entity.MateriaEntity;
-import com.fullstack.educacional.datasource.repository.CursoRepository;
 import com.fullstack.educacional.service.CursoServiceImpl;
-import com.fullstack.educacional.service.GenericServiceImpl;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

@@ -1,9 +1,7 @@
 package com.fullstack.educacional.datasource.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
 import lombok.Data;
-import lombok.Setter;
 
 import java.time.LocalDate;
 

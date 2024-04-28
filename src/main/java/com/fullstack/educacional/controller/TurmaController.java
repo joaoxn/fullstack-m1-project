@@ -2,8 +2,6 @@ package com.fullstack.educacional.controller;
 
 import com.fullstack.educacional.controller.dto.request.TurmaRequest;
 import com.fullstack.educacional.datasource.entity.TurmaEntity;
-import com.fullstack.educacional.datasource.repository.TurmaRepository;
-import com.fullstack.educacional.service.GenericServiceImpl;
 import com.fullstack.educacional.service.TurmaServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
