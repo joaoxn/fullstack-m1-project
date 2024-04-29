@@ -26,8 +26,8 @@ public class NotaController {
     }
 
     @PostMapping
-    public ResponseEntity<NotaEntity> post(@RequestBody NotaRequest request) {
-        return ResponseEntity.ok(service.create(request));
+    public ResponseEntity<NotaEntity> post(@RequestBody NotaRequest request, @RequestHeader(name = "Authorization") String token) {
+        return ResponseEntity.ok(service.create(request, token));
     }
 
     @PutMapping("{id}")

@@ -7,6 +7,7 @@ import com.fullstack.educacional.datasource.repository.DocenteRepository;
 import com.fullstack.educacional.datasource.repository.MateriaRepository;
 import com.fullstack.educacional.datasource.repository.NotaRepository;
 import jakarta.transaction.Transactional;
+import org.antlr.v4.runtime.Token;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -18,17 +19,32 @@ public class NotaServiceImpl extends GenericServiceImpl<NotaEntity, NotaRequest,
     private final AlunoRepository alunoRepository;
     private final DocenteRepository docenteRepository;
     private final MateriaRepository materiaRepository;
+    private final TokenService tokenService;
 
     public NotaServiceImpl(
             NotaRepository repository,
             AlunoRepository alunoRepository,
             DocenteRepository docenteRepository,
-            MateriaRepository materiaRepository
+            MateriaRepository materiaRepository,
+            TokenService tokenService
     ) {
         super(repository);
         this.alunoRepository = alunoRepository;
         this.docenteRepository = docenteRepository;
         this.materiaRepository = materiaRepository;
+        this.tokenService = tokenService;
+    }
+
+    public NotaEntity create(NotaRequest entity, String token) {
+        NotaEntity entitySave = equalProperties(newEntity(), entity);
+        if (entitySave.getDocente() == null) {
+            Long usuarioId = Long.valueOf(
+                    tokenService.buscaCampo(token, "sub")
+            );
+            entitySave.setDocente(docenteRepository.findByUsuarioId(usuarioId)
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Professor não encontrado")));
+        }
+        return getRepository().save(entitySave);
     }
 
     public NotaEntity newEntity() {
@@ -49,15 +65,6 @@ public class NotaServiceImpl extends GenericServiceImpl<NotaEntity, NotaRequest,
         } catch (ResponseStatusException ignore) {}
         if (aluno != null) {
             entity.setAluno(aluno);
-        }
-
-        DocenteEntity docente = null;
-        try {
-            docente = docenteRepository.findById(data.docenteId())
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        } catch (ResponseStatusException ignore) {}
-        if (docente != null) {
-            entity.setDocente(docente);
         }
 
         MateriaEntity materia = null;
