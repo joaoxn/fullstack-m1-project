@@ -2,8 +2,6 @@ package com.fullstack.educacional.controller;
 
 import com.fullstack.educacional.controller.dto.request.TurmaRequest;
 import com.fullstack.educacional.datasource.entity.TurmaEntity;
-import com.fullstack.educacional.datasource.repository.TurmaRepository;
-import com.fullstack.educacional.service.GenericServiceImpl;
 import com.fullstack.educacional.service.TurmaServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -41,7 +39,7 @@ public class TurmaController {
     }
 
     @DeleteMapping("{id}")
-    public void delete(@PathVariable Long id) {
-        service.delete(id);
+    public ResponseEntity<String> delete(@PathVariable Long id) {
+        return ResponseEntity.ok(service.delete(id));
     }
 }

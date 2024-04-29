@@ -48,7 +48,6 @@ public class CadastroController {
 
     @DeleteMapping("usuarios/{id}")
     public ResponseEntity<String> deleteUsuario(@PathVariable Long id) {
-        usuarioService.delete(id);
-        return ResponseEntity.ok("Usuário "+ id +" deletado com sucesso!");
+        return ResponseEntity.ok(usuarioService.delete(id));
     }
 }

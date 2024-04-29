@@ -1,7 +1,5 @@
 package com.fullstack.educacional.service;
 
-import com.fullstack.educacional.datasource.entity.CursoEntity;
-import com.fullstack.educacional.datasource.repository.CursoRepository;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,7 +13,6 @@ import java.util.List;
 public abstract class GenericServiceImpl<E, DTO, R extends JpaRepository<E, Long>> {
 
     private final R repository;
-    private final E newEntity;
 
     public E get(Long id) {
         return repository.findById(id)
@@ -28,7 +25,8 @@ public abstract class GenericServiceImpl<E, DTO, R extends JpaRepository<E, Long
     }
 
     public E create(DTO entity) {
-        return repository.save(equalProperties(newEntity, entity));
+        E entitySave = equalProperties(newEntity(), entity);
+        return repository.save(entitySave);
     }
 
     public E alter(Long id, DTO data) {
@@ -41,12 +39,15 @@ public abstract class GenericServiceImpl<E, DTO, R extends JpaRepository<E, Long
         return repository.save(equalProperties(entityFound, data));
     }
 
-    public abstract E equalProperties(E entity, DTO data);
-
-    public void delete(Long id) {
+    public String delete(Long id) {
         E entity = repository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Entidade não encontrada com ID: " + id));
         repository.delete(entity);
+        return "Entidade com ID: "+ id +" deletado com sucesso!";
     }
+
+    public abstract E equalProperties(E entity, DTO data);
+
+    public abstract E newEntity();
 }

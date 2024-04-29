@@ -29,7 +29,7 @@ public class AlunoServiceImpl extends GenericServiceImpl<AlunoEntity, AlunoReque
             NotaRepository notaRepository,
             TokenService tokenService
     ) {
-        super(repository, new AlunoEntity());
+        super(repository);
         this.repository = repository;
         this.turmaRepository = turmaRepository;
         this.usuarioRepository = usuarioRepository;
@@ -37,14 +37,27 @@ public class AlunoServiceImpl extends GenericServiceImpl<AlunoEntity, AlunoReque
         this.tokenService = tokenService;
     }
 
+    public AlunoEntity newEntity() {
+        return new AlunoEntity();
+    }
+
     public AlunoEntity get(Long id, String token) {
         validarPermissaoAluno(id, token);
         return repository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "Entidade não encontrada com ID: " + id));
+                        HttpStatus.NOT_FOUND, "Aluno não encontrado com ID: " + id));
     }
 
     @Override
+    public AlunoEntity create(AlunoRequest alunoRequest) {
+        if (!usuarioRepository.findByLogin(alunoRequest.login())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND))
+                .getPapel().getNome().equals("ALUNO")) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tentou criar aluno com um usuário sem papel de ALUNO");
+        }
+        return repository.save(equalProperties(new AlunoEntity(), alunoRequest));
+    }
+
     public AlunoEntity equalProperties(AlunoEntity entity, AlunoRequest data) {
         String nome = data.nome();
         if (nome != null) {
@@ -52,7 +65,7 @@ public class AlunoServiceImpl extends GenericServiceImpl<AlunoEntity, AlunoReque
         }
         TurmaEntity turma = null;
         try {
-            turma = turmaRepository.findByNome(data.nomeTurma())
+            turma = turmaRepository.findById(data.turmaId())
                     .orElseThrow();
         } catch (RuntimeException ignore) {}
         if (turma != null) {
@@ -83,7 +96,7 @@ public class AlunoServiceImpl extends GenericServiceImpl<AlunoEntity, AlunoReque
 
         return notaRepository.findAllByAluno(aluno)
                 .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "Nenhuma nota encontrada com aluno de nomeAluno: " + aluno.getNome()));
+                        HttpStatus.NOT_FOUND, "Nenhuma nota encontrada com aluno ["+ aluno.getId() +"] de nome: " + aluno.getNome()));
     }
 
     public PontuacaoResponse getPontuacaoTotal(Long alunoId) {

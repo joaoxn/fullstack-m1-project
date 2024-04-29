@@ -2,10 +2,6 @@ package com.fullstack.educacional.controller;
 
 import com.fullstack.educacional.controller.dto.request.MateriaRequest;
 import com.fullstack.educacional.datasource.entity.MateriaEntity;
-import com.fullstack.educacional.datasource.entity.MateriaEntity;
-import com.fullstack.educacional.datasource.repository.MateriaRepository;
-import com.fullstack.educacional.service.GenericService;
-import com.fullstack.educacional.service.GenericServiceImpl;
 import com.fullstack.educacional.service.MateriaServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -43,7 +39,7 @@ public class MateriaController {
     }
 
     @DeleteMapping("{id}")
-    public void delete(@PathVariable Long id) {
-        service.delete(id);
+    public ResponseEntity<String> delete(@PathVariable Long id) {
+        return ResponseEntity.ok(service.delete(id));
     }
 }

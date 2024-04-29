@@ -53,7 +53,7 @@ VALUES ('João Victor Olivo', 6, 1, '2007-08-09'),
        ('Pedro Santos', 11, 3, '2004-03-02'),
        ('Anaísa Teodoro', 12, 5, '1987-06-05');
 
-INSERT INTO nota (aluno_id, docente_id, materia_id, valor, data)
+INSERT INTO nota (aluno_id, docente_id, materia_id, valor, data_entrada)
 VALUES (1, 4, 1, 9.75, '2024-04-28'),
        (1, 4, 2, 7.4, '2024-04-28'),
        (1, 4, 2, 6, '2024-04-28'),

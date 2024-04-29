@@ -37,7 +37,7 @@ public class GenericController<E, DTO, S extends GenericService<E, DTO>> {
     }
 
     @DeleteMapping("{id}")
-    public void delete(@PathVariable Long id) {
-        service.delete(id);
+    public ResponseEntity<String> delete(@PathVariable Long id) {
+        return ResponseEntity.ok(service.delete(id));
     }
 }

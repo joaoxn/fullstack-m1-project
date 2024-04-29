@@ -1,6 +1,7 @@
 package com.fullstack.educacional.service;
 
 import com.fullstack.educacional.controller.dto.request.UsuarioRequest;
+import com.fullstack.educacional.datasource.entity.NotaEntity;
 import com.fullstack.educacional.datasource.entity.PapelEntity;
 import com.fullstack.educacional.datasource.entity.UsuarioEntity;
 import com.fullstack.educacional.datasource.repository.PapelRepository;
@@ -10,9 +11,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Service
 public class UsuarioServiceImpl extends GenericServiceImpl<UsuarioEntity, UsuarioRequest, UsuarioRepository> implements GenericService<UsuarioEntity, UsuarioRequest> {
     private final BCryptPasswordEncoder bCryptEncoder;
@@ -21,14 +19,17 @@ public class UsuarioServiceImpl extends GenericServiceImpl<UsuarioEntity, Usuari
     private final TokenService tokenService;
 
     public UsuarioServiceImpl(UsuarioRepository repository, PapelRepository papelRepository, BCryptPasswordEncoder bCryptEncoder, TokenService tokenService) {
-        super(repository, new UsuarioEntity());
+        super(repository);
         this.papelRepository = papelRepository;
         this.bCryptEncoder = bCryptEncoder;
         this.repository = repository;
         this.tokenService = tokenService;
     }
 
-    @Override
+    public UsuarioEntity newEntity() {
+        return new UsuarioEntity();
+    }
+
     public UsuarioEntity create(UsuarioRequest usuarioRequest) {
         validarUsuario(usuarioRequest, "todos");
         UsuarioEntity usuario = equalProperties(new UsuarioEntity(), usuarioRequest);

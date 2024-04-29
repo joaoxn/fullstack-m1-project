@@ -18,10 +18,10 @@ public class TurmaEntity {
     private String nome;
 
     @ManyToOne
-    @JoinColumn(name = "docente_id")
+    @JoinColumn(name = "docente_id", nullable = false)
     private DocenteEntity docente;
 
     @ManyToOne
-    @JoinColumn(name = "curso_id")
+    @JoinColumn(name = "curso_id", nullable = false)
     private CursoEntity curso;
 }

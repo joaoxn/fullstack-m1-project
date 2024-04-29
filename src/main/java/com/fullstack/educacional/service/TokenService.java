@@ -29,7 +29,7 @@ public class TokenService {
     private final JwtDecoder jwtDecoder; // decodifica um JWT
     private final UsuarioRepository usuarioRepository;
 
-    private static long TEMPO_EXPIRACAO = 36000L; //contante de tempo de expiração em segundos
+    private final static long TEMPO_EXPIRACAO = 36000L; //contante de tempo de expiração em segundos
 
     public LoginResponse gerarToken(
             @RequestBody LoginRequest loginRequest

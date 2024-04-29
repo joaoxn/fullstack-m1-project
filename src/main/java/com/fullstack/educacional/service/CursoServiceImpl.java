@@ -3,6 +3,7 @@ package com.fullstack.educacional.service;
 import com.fullstack.educacional.controller.dto.request.CursoRequest;
 import com.fullstack.educacional.datasource.entity.CursoEntity;
 import com.fullstack.educacional.datasource.entity.MateriaEntity;
+import com.fullstack.educacional.datasource.entity.NotaEntity;
 import com.fullstack.educacional.datasource.repository.CursoRepository;
 import com.fullstack.educacional.datasource.repository.MateriaRepository;
 import org.springframework.http.HttpStatus;
@@ -18,16 +19,19 @@ public class CursoServiceImpl extends GenericServiceImpl<CursoEntity, CursoReque
     private final CursoRepository repository;
 
     public CursoServiceImpl(MateriaRepository materiaRepository, CursoRepository repository) {
-        super(repository, new CursoEntity());
+        super(repository);
         this.materiaRepository = materiaRepository;
         this.repository = repository;
     }
 
-    @Override
+    public CursoEntity newEntity() {
+        return new CursoEntity();
+    }
+
     public CursoEntity equalProperties(CursoEntity entity, CursoRequest data) {
-        String Nome = data.nome();
-        if (Nome != null) {
-            entity.setNome(Nome);
+        String nome = data.nome();
+        if (nome != null) {
+            entity.setNome(nome);
         }
 
         return entity;
@@ -40,6 +44,6 @@ public class CursoServiceImpl extends GenericServiceImpl<CursoEntity, CursoReque
 
         return materiaRepository.findAllByCurso(curso)
                 .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "Nenhuma matéria encontrada com curso de nomeAluno: " + curso.getNome()));
+                        HttpStatus.NOT_FOUND, "Nenhuma matéria encontrada com curso ["+ curso.getId() +"] de nome: " + curso.getNome()));
     }
 }
