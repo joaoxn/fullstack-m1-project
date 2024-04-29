@@ -30,10 +30,6 @@ public class CursoServiceImpl extends GenericServiceImpl<CursoEntity, CursoReque
             entity.setNome(Nome);
         }
 
-        if (entity.getDataEntrada() == null) {
-            entity.setDataEntrada(LocalDate.now());
-        }
-
         return entity;
     }
 

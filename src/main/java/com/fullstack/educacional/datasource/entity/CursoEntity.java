@@ -16,6 +16,4 @@ public class CursoEntity {
     private Long id;
 
     private String nome;
-
-    private LocalDate dataEntrada;
 }

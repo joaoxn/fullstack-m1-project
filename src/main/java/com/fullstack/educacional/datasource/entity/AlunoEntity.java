@@ -19,6 +19,7 @@ public class AlunoEntity {
 
     private LocalDate dataNascimento;
 
+    @OneToOne
     @JoinColumn(name = "usuario_id", nullable = false)
     private UsuarioEntity usuario;
 
