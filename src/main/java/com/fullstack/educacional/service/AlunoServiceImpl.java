@@ -3,10 +3,7 @@ package com.fullstack.educacional.service;
 import com.fullstack.educacional.controller.dto.request.AlunoRequest;
 import com.fullstack.educacional.controller.dto.response.PontuacaoResponse;
 import com.fullstack.educacional.datasource.entity.*;
-import com.fullstack.educacional.datasource.repository.AlunoRepository;
-import com.fullstack.educacional.datasource.repository.NotaRepository;
-import com.fullstack.educacional.datasource.repository.TurmaRepository;
-import com.fullstack.educacional.datasource.repository.UsuarioRepository;
+import com.fullstack.educacional.datasource.repository.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -19,6 +16,7 @@ public class AlunoServiceImpl extends GenericServiceImpl<AlunoEntity, AlunoReque
     private final AlunoRepository repository;
     private final TurmaRepository turmaRepository;
     private final UsuarioRepository usuarioRepository;
+    private final MateriaRepository materiaRepository;
     private final NotaRepository notaRepository;
     private final TokenService tokenService;
 
@@ -26,6 +24,7 @@ public class AlunoServiceImpl extends GenericServiceImpl<AlunoEntity, AlunoReque
             AlunoRepository repository,
             TurmaRepository turmaRepository,
             UsuarioRepository usuarioRepository,
+            MateriaRepository materiaRepository,
             NotaRepository notaRepository,
             TokenService tokenService
     ) {
@@ -33,6 +32,7 @@ public class AlunoServiceImpl extends GenericServiceImpl<AlunoEntity, AlunoReque
         this.repository = repository;
         this.turmaRepository = turmaRepository;
         this.usuarioRepository = usuarioRepository;
+        this.materiaRepository = materiaRepository;
         this.notaRepository = notaRepository;
         this.tokenService = tokenService;
     }
@@ -67,7 +67,8 @@ public class AlunoServiceImpl extends GenericServiceImpl<AlunoEntity, AlunoReque
         try {
             turma = turmaRepository.findById(data.turmaId())
                     .orElseThrow();
-        } catch (RuntimeException ignore) {}
+        } catch (RuntimeException ignore) {
+        }
         if (turma != null) {
             entity.setTurma(turma);
         }
@@ -76,7 +77,8 @@ public class AlunoServiceImpl extends GenericServiceImpl<AlunoEntity, AlunoReque
         try {
             usuario = usuarioRepository.findByLogin(data.login())
                     .orElseThrow();
-        } catch (RuntimeException ignore) {}
+        } catch (RuntimeException ignore) {
+        }
         if (usuario != null) {
             entity.setUsuario(usuario);
         }
@@ -89,19 +91,29 @@ public class AlunoServiceImpl extends GenericServiceImpl<AlunoEntity, AlunoReque
         return entity;
     }
 
-    public List<NotaEntity> getAllNotas(Long alunoId) {
-        AlunoEntity aluno = repository.findById(alunoId)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "Nenhum aluno encontrado com ID: " + alunoId));
+    public List<NotaEntity> getAllNotas(Long id, String token) {
+        validarPermissaoAluno(id, token);
 
-        return notaRepository.findAllByAluno(aluno)
+        AlunoEntity aluno = repository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "Nenhuma nota encontrada com aluno ["+ aluno.getId() +"] de nome: " + aluno.getNome()));
+                        HttpStatus.NOT_FOUND, "Nenhum aluno encontrado com ID: " + id));
+
+        return notaRepository.findAllByAluno(aluno);
     }
 
-    public PontuacaoResponse getPontuacaoTotal(Long alunoId) {
-        return null;
-        //TODO: criar lógica para pontuação total
+    public PontuacaoResponse getPontuacaoTotal(Long id, String token) {
+        validarPermissaoAluno(id, token);
+
+        AlunoEntity aluno = repository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Aluno não encontrado com ID: " + id));
+        List<NotaEntity> notas = notaRepository.findAllByAluno(aluno);
+        List<MateriaEntity> materias = materiaRepository.findAllByCurso(aluno.getTurma().getCurso());
+
+        Float somaNotas = 0F;
+        for (NotaEntity nota : notas) {
+            somaNotas += nota.getValor();
+        }
+        return new PontuacaoResponse(somaNotas / materias.size() * 10);
     }
 
     public void validarPermissaoAluno(Long id, String token) {
@@ -115,11 +127,11 @@ public class AlunoServiceImpl extends GenericServiceImpl<AlunoEntity, AlunoReque
         if (usuarioScope.equals("ALUNO") &&
                 !usuarioId.equals(
                         repository.findById(id)
-                                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Não encontrado aluno com ID: "+ id))
+                                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Não encontrado aluno com ID: " + id))
                                 .getUsuario()
                                 .getId()
                 )) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Você não tem acesso a essas informações por não serem suas. (Tentou acessar aluno com id: "+ id +")");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Você não tem acesso a essas informações por não serem suas. (Tentou acessar aluno com id: " + id + ")");
         }
     }
 }

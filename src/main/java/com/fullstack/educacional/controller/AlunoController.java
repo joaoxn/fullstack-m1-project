@@ -43,12 +43,12 @@ public class AlunoController {
     }
 
     @GetMapping("{id}/notas")
-    public ResponseEntity<List<NotaEntity>> getAllNotas(@PathVariable Long id) {
-        return ResponseEntity.ok(service.getAllNotas(id));
+    public ResponseEntity<List<NotaEntity>> getAllNotas(@PathVariable Long id, @RequestHeader(name = "Authorization") String token) {
+        return ResponseEntity.ok(service.getAllNotas(id, token));
     }
 
     @GetMapping("{id}/pontuacao")
-    public ResponseEntity<PontuacaoResponse> getPontuacaoTotal(@PathVariable Long id) {
-        return ResponseEntity.ok(service.getPontuacaoTotal(id));
+    public ResponseEntity<PontuacaoResponse> getPontuacaoTotal(@PathVariable Long id, @RequestHeader(name = "Authorization") String token) {
+        return ResponseEntity.ok(service.getPontuacaoTotal(id, token));
     }
 }

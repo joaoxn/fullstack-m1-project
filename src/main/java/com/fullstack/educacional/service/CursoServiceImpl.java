@@ -42,8 +42,6 @@ public class CursoServiceImpl extends GenericServiceImpl<CursoEntity, CursoReque
                 .orElseThrow(() -> new ResponseStatusException(
                 HttpStatus.NOT_FOUND, "Nenhum curso encontrado com ID: " + cursoId));
 
-        return materiaRepository.findAllByCurso(curso)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "Nenhuma matéria encontrada com curso ["+ curso.getId() +"] de nome: " + curso.getNome()));
+        return materiaRepository.findAllByCurso(curso);
     }
 }

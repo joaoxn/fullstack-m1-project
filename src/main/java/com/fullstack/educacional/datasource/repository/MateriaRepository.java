@@ -10,5 +10,5 @@ import java.util.Optional;
 
 @Repository
 public interface MateriaRepository extends JpaRepository<MateriaEntity, Long> {
-    Optional<List<MateriaEntity>> findAllByCurso(CursoEntity curso);
+    List<MateriaEntity> findAllByCurso(CursoEntity curso);
 }
