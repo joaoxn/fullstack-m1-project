@@ -1,15 +1,14 @@
 package com.fullstack.educacional.service;
 
 import com.fullstack.educacional.controller.dto.request.UsuarioRequest;
-import com.fullstack.educacional.datasource.entity.NotaEntity;
 import com.fullstack.educacional.datasource.entity.PapelEntity;
 import com.fullstack.educacional.datasource.entity.UsuarioEntity;
 import com.fullstack.educacional.datasource.repository.PapelRepository;
 import com.fullstack.educacional.datasource.repository.UsuarioRepository;
+import com.fullstack.educacional.infra.exception.CustomErrorException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class UsuarioServiceImpl extends GenericServiceImpl<UsuarioEntity, UsuarioRequest, UsuarioRepository> implements GenericService<UsuarioEntity, UsuarioRequest> {
@@ -39,7 +38,7 @@ public class UsuarioServiceImpl extends GenericServiceImpl<UsuarioEntity, Usuari
     @Override
     public UsuarioEntity get(Long id) {
         return repository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(
+                .orElseThrow(() -> new CustomErrorException(
                         HttpStatus.NOT_FOUND, "Entidade não encontrada com ID: " + id));
     }
 
@@ -48,7 +47,7 @@ public class UsuarioServiceImpl extends GenericServiceImpl<UsuarioEntity, Usuari
                 tokenService.buscaCampo(token, "sub")
         );
         UsuarioEntity usuario = repository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Não encontrado usuário com id: "+ id));
+                .orElseThrow(() -> new CustomErrorException(HttpStatus.NOT_FOUND, "Não encontrado usuário com id: "+ id));
         UsuarioRequest request = new UsuarioRequest(null, senha, null);
         validarUsuario(request, "senha");
         usuario = equalProperties(usuario, request);
@@ -70,8 +69,8 @@ public class UsuarioServiceImpl extends GenericServiceImpl<UsuarioEntity, Usuari
         PapelEntity papel = null;
         try {
             papel = papelRepository.findByNome(data.papel())
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        } catch (ResponseStatusException ignored) {}
+                    .orElseThrow(() -> new CustomErrorException(HttpStatus.NOT_FOUND));
+        } catch (CustomErrorException ignored) {}
         if (papel != null) {
             entity.setPapel(papel);
         }
@@ -83,13 +82,13 @@ public class UsuarioServiceImpl extends GenericServiceImpl<UsuarioEntity, Usuari
         switch(opcao) {
             case "login":
             if (usuario.login().length() < 3) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                throw new CustomErrorException(HttpStatus.BAD_REQUEST,
                         "Login do usuário é muito curto! Tamanho: " + usuario.login().length() + " caracteres (Mínimo: 3)");
             }
             break;
             case "senha":
             if (usuario.senha().length() < 3) {
-                throw new ResponseStatusException(
+                throw new CustomErrorException(
                         HttpStatus.BAD_REQUEST,
                         "Senha do usuário é muito curta! Tamanho: " + usuario.senha().length() + " caracteres (Mínimo: 3)"
                 );
@@ -97,7 +96,7 @@ public class UsuarioServiceImpl extends GenericServiceImpl<UsuarioEntity, Usuari
             break;
             case "jaExiste":
             if (repository.findByLogin(usuario.login()).isPresent()) {
-                throw new ResponseStatusException(
+                throw new CustomErrorException(
                         HttpStatus.BAD_REQUEST,
                         "Usuário com login " + usuario.login() + " já existe!"
                 );

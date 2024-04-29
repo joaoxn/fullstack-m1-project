@@ -3,14 +3,11 @@ package com.fullstack.educacional.service;
 import com.fullstack.educacional.controller.dto.request.MateriaRequest;
 import com.fullstack.educacional.datasource.entity.CursoEntity;
 import com.fullstack.educacional.datasource.entity.MateriaEntity;
-import com.fullstack.educacional.datasource.entity.NotaEntity;
 import com.fullstack.educacional.datasource.repository.CursoRepository;
 import com.fullstack.educacional.datasource.repository.MateriaRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
-
-import java.time.LocalDate;
+import com.fullstack.educacional.infra.exception.CustomErrorException;
 
 @Service
 public class MateriaServiceImpl extends GenericServiceImpl<MateriaEntity, MateriaRequest, MateriaRepository> implements GenericService<MateriaEntity, MateriaRequest> {
@@ -34,8 +31,8 @@ public class MateriaServiceImpl extends GenericServiceImpl<MateriaEntity, Materi
         CursoEntity curso = null;
         try {
             curso = cursoRepository.findById(data.cursoId())
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        } catch (ResponseStatusException ignore) {}
+                    .orElseThrow(() -> new CustomErrorException(HttpStatus.NOT_FOUND));
+        } catch (CustomErrorException ignore) {}
         if (curso != null) {
             entity.setCurso(curso);
         }

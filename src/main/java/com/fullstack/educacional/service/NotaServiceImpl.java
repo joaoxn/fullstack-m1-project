@@ -6,11 +6,9 @@ import com.fullstack.educacional.datasource.repository.AlunoRepository;
 import com.fullstack.educacional.datasource.repository.DocenteRepository;
 import com.fullstack.educacional.datasource.repository.MateriaRepository;
 import com.fullstack.educacional.datasource.repository.NotaRepository;
-import jakarta.transaction.Transactional;
-import org.antlr.v4.runtime.Token;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
+import com.fullstack.educacional.infra.exception.CustomErrorException;
 
 import java.time.LocalDate;
 
@@ -42,7 +40,7 @@ public class NotaServiceImpl extends GenericServiceImpl<NotaEntity, NotaRequest,
                     tokenService.buscaCampo(token, "sub")
             );
             entitySave.setDocente(docenteRepository.findByUsuarioId(usuarioId)
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Professor não encontrado")));
+                    .orElseThrow(() -> new CustomErrorException(HttpStatus.BAD_REQUEST, "Professor não encontrado")));
         }
         return getRepository().save(entitySave);
     }
@@ -61,8 +59,8 @@ public class NotaServiceImpl extends GenericServiceImpl<NotaEntity, NotaRequest,
         AlunoEntity aluno = null;
         try {
             aluno = alunoRepository.findById(data.alunoId())
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        } catch (ResponseStatusException ignore) {}
+                    .orElseThrow(() -> new CustomErrorException(HttpStatus.NOT_FOUND));
+        } catch (CustomErrorException ignore) {}
         if (aluno != null) {
             entity.setAluno(aluno);
         }
@@ -70,8 +68,8 @@ public class NotaServiceImpl extends GenericServiceImpl<NotaEntity, NotaRequest,
         MateriaEntity materia = null;
         try {
             materia = materiaRepository.findById(data.materiaId())
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        } catch (ResponseStatusException ignore) {}
+                    .orElseThrow(() -> new CustomErrorException(HttpStatus.NOT_FOUND));
+        } catch (CustomErrorException ignore) {}
         if (materia != null) {
             entity.setMateria(materia);
         }

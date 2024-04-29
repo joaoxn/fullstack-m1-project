@@ -6,7 +6,7 @@ import com.fullstack.educacional.datasource.entity.*;
 import com.fullstack.educacional.datasource.repository.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
+import com.fullstack.educacional.infra.exception.CustomErrorException;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -44,16 +44,16 @@ public class AlunoServiceImpl extends GenericServiceImpl<AlunoEntity, AlunoReque
     public AlunoEntity get(Long id, String token) {
         validarPermissaoAluno(id, token);
         return repository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(
+                .orElseThrow(() -> new CustomErrorException(
                         HttpStatus.NOT_FOUND, "Aluno não encontrado com ID: " + id));
     }
 
     @Override
     public AlunoEntity create(AlunoRequest alunoRequest) {
         if (!usuarioRepository.findByLogin(alunoRequest.login())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND))
+                .orElseThrow(() -> new CustomErrorException(HttpStatus.NOT_FOUND))
                 .getPapel().getNome().equals("ALUNO")) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tentou criar aluno com um usuário sem papel de ALUNO");
+            throw new CustomErrorException(HttpStatus.BAD_REQUEST, "Tentou criar aluno com um usuário sem papel de ALUNO");
         }
         return repository.save(equalProperties(new AlunoEntity(), alunoRequest));
     }
@@ -95,7 +95,7 @@ public class AlunoServiceImpl extends GenericServiceImpl<AlunoEntity, AlunoReque
         validarPermissaoAluno(id, token);
 
         AlunoEntity aluno = repository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(
+                .orElseThrow(() -> new CustomErrorException(
                         HttpStatus.NOT_FOUND, "Nenhum aluno encontrado com ID: " + id));
 
         return notaRepository.findAllByAluno(aluno);
@@ -105,7 +105,7 @@ public class AlunoServiceImpl extends GenericServiceImpl<AlunoEntity, AlunoReque
         validarPermissaoAluno(id, token);
 
         AlunoEntity aluno = repository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Aluno não encontrado com ID: " + id));
+                .orElseThrow(() -> new CustomErrorException(HttpStatus.NOT_FOUND, "Aluno não encontrado com ID: " + id));
         List<NotaEntity> notas = notaRepository.findAllByAluno(aluno);
         List<MateriaEntity> materias = materiaRepository.findAllByCurso(aluno.getTurma().getCurso());
 
@@ -127,11 +127,11 @@ public class AlunoServiceImpl extends GenericServiceImpl<AlunoEntity, AlunoReque
         if (usuarioScope.equals("ALUNO") &&
                 !usuarioId.equals(
                         repository.findById(id)
-                                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Não encontrado aluno com ID: " + id))
+                                .orElseThrow(() -> new CustomErrorException(HttpStatus.NOT_FOUND, "Não encontrado aluno com ID: " + id))
                                 .getUsuario()
                                 .getId()
                 )) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Você não tem acesso a essas informações por não serem suas. (Tentou acessar aluno com id: " + id + ")");
+            throw new CustomErrorException(HttpStatus.UNAUTHORIZED, "Você não tem acesso a essas informações por não serem suas. (Tentou acessar aluno com id: " + id + ")");
         }
     }
 }

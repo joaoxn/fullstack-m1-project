@@ -3,14 +3,12 @@ package com.fullstack.educacional.service;
 import com.fullstack.educacional.controller.dto.request.CursoRequest;
 import com.fullstack.educacional.datasource.entity.CursoEntity;
 import com.fullstack.educacional.datasource.entity.MateriaEntity;
-import com.fullstack.educacional.datasource.entity.NotaEntity;
 import com.fullstack.educacional.datasource.repository.CursoRepository;
 import com.fullstack.educacional.datasource.repository.MateriaRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
+import com.fullstack.educacional.infra.exception.CustomErrorException;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -39,7 +37,7 @@ public class CursoServiceImpl extends GenericServiceImpl<CursoEntity, CursoReque
 
     public List<MateriaEntity> getAllMaterias(Long cursoId) {
         CursoEntity curso = repository.findById(cursoId)
-                .orElseThrow(() -> new ResponseStatusException(
+                .orElseThrow(() -> new CustomErrorException(
                 HttpStatus.NOT_FOUND, "Nenhum curso encontrado com ID: " + cursoId));
 
         return materiaRepository.findAllByCurso(curso);
