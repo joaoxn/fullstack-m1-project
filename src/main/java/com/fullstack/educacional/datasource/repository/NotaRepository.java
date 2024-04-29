@@ -10,5 +10,5 @@ import java.util.Optional;
 
 @Repository
 public interface NotaRepository extends JpaRepository<NotaEntity, Long> {
-    Optional<List<NotaEntity>> findAllByAluno(AlunoEntity aluno);
+    List<NotaEntity> findAllByAluno(AlunoEntity aluno);
 }
