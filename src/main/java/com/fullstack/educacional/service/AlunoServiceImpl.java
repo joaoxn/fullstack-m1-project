@@ -4,6 +4,7 @@ import com.fullstack.educacional.controller.dto.request.AlunoRequest;
 import com.fullstack.educacional.controller.dto.response.PontuacaoResponse;
 import com.fullstack.educacional.datasource.entity.*;
 import com.fullstack.educacional.datasource.repository.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import com.fullstack.educacional.infra.exception.CustomErrorException;
@@ -12,6 +13,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Service
+@Slf4j
 public class AlunoServiceImpl extends GenericServiceImpl<AlunoEntity, AlunoRequest, AlunoRepository> implements GenericService<AlunoEntity, AlunoRequest> {
     private final AlunoRepository repository;
     private final TurmaRepository turmaRepository;
@@ -62,12 +64,15 @@ public class AlunoServiceImpl extends GenericServiceImpl<AlunoEntity, AlunoReque
         String nome = data.nome();
         if (nome != null) {
             entity.setNome(nome);
+        } else {
+            log.warn("AlunoServiceImpl.equalProperties() -> retornando aluno com 'nome' nulo");
         }
         TurmaEntity turma = null;
         try {
             turma = turmaRepository.findById(data.turmaId())
                     .orElseThrow();
         } catch (RuntimeException ignore) {
+            log.warn("AlunoServiceImpl.equalProperties() -> retornando aluno com 'turma' nulo");
         }
         if (turma != null) {
             entity.setTurma(turma);
@@ -78,6 +83,7 @@ public class AlunoServiceImpl extends GenericServiceImpl<AlunoEntity, AlunoReque
             usuario = usuarioRepository.findByLogin(data.login())
                     .orElseThrow();
         } catch (RuntimeException ignore) {
+            log.warn("AlunoServiceImpl.equalProperties() -> retornando aluno com 'usuario' nulo");
         }
         if (usuario != null) {
             entity.setUsuario(usuario);
@@ -86,6 +92,8 @@ public class AlunoServiceImpl extends GenericServiceImpl<AlunoEntity, AlunoReque
         LocalDate dataNascimento = data.dataNascimento();
         if (dataNascimento != null) {
             entity.setDataNascimento(dataNascimento);
+        } else {
+            log.warn("AlunoServiceImpl.equalProperties() -> retornando aluno com 'dataNascimento' nulo");
         }
 
         return entity;

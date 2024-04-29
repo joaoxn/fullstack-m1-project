@@ -1,6 +1,7 @@
 package com.fullstack.educacional.controller;
 
 import com.fullstack.educacional.controller.dto.request.UsuarioRequest;
+import com.fullstack.educacional.datasource.entity.AlunoEntity;
 import com.fullstack.educacional.datasource.entity.PapelEntity;
 import com.fullstack.educacional.datasource.entity.UsuarioEntity;
 import com.fullstack.educacional.datasource.repository.PapelRepository;
@@ -31,14 +32,22 @@ public class CadastroController {
     @PostMapping("papel")
     public ResponseEntity<String> papel(@RequestBody PapelEntity papel) {
         log.info("POST /papel -> Criando novo papel");
-        papelRepository.save(papel);
+        PapelEntity papelEntity = papelRepository.save(papel);
+        log.debug("POST /papel -> Papel criado com ID: {} e nome: {}", papel.getId(), papel.getNome());
         return ResponseEntity.ok("Papel salvo com sucesso!");
     }
 
     @GetMapping("usuarios")
     public ResponseEntity<List<UsuarioEntity>> getUsuarios() {
         log.info("GET /usuarios -> Buscando todos os usuários");
-        return ResponseEntity.ok(usuarioService.getAll());
+        List<UsuarioEntity> usuarios = usuarioService.getAll();
+        log.info("GET /alunos -> {} alunos encontrados", usuarios.size());
+        StringBuilder ids = new StringBuilder();
+        for (UsuarioEntity usuario : usuarios) {
+            ids.append(usuario.getId()).append(" ");
+        }
+        log.debug("GET /usuarios -> {} usuários encontrados com IDs:\n{}", usuarios.size(), ids);
+        return ResponseEntity.ok(usuarios);
     }
 
     @GetMapping("usuarios/{id}")
@@ -50,6 +59,7 @@ public class CadastroController {
     @PutMapping("usuarios/senha")
     public ResponseEntity<String> alterUsuarioSenha(@RequestHeader(name = "Authorization") String token, @RequestBody String senha) {
         log.info("PUT /usuarios/senha -> Alterando senha do usuário logado");
+        log.debug("GET /usuarios/senha -> Alterando senha de usuário de token: {}", token);
         return ResponseEntity.ok(usuarioService.alterSenha(token, senha));
     }
 
