@@ -125,6 +125,7 @@ public class AlunoServiceImpl extends GenericServiceImpl<AlunoEntity, AlunoReque
     }
 
     public void validarPermissaoAluno(Long id, String token) {
+        log.info("AlunoServiceImpl.validarPermissaoAluno() -> Validando se usuário pode acessar o endpoint");
         Long usuarioId = Long.valueOf(
                 tokenService.buscaCampo(token, "sub")
         );
@@ -139,7 +140,9 @@ public class AlunoServiceImpl extends GenericServiceImpl<AlunoEntity, AlunoReque
                                 .getUsuario()
                                 .getId()
                 )) {
+            log.error("AlunoServiceImpl.validarPermissaoAluno() -> Aluno não autorizado");
             throw new CustomErrorException(HttpStatus.UNAUTHORIZED, "Você não tem acesso a essas informações por não serem suas. (Tentou acessar aluno com id: " + id + ")");
         }
+        log.info("AlunoServiceImpl.validarPermissaoAluno() -> Usuário autorizado com sucesso");
     }
 }
