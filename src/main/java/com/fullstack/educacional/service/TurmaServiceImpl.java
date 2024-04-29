@@ -3,6 +3,7 @@ package com.fullstack.educacional.service;
 import com.fullstack.educacional.controller.dto.request.TurmaRequest;
 import com.fullstack.educacional.datasource.entity.CursoEntity;
 import com.fullstack.educacional.datasource.entity.DocenteEntity;
+import com.fullstack.educacional.datasource.entity.NotaEntity;
 import com.fullstack.educacional.datasource.entity.TurmaEntity;
 import com.fullstack.educacional.datasource.repository.CursoRepository;
 import com.fullstack.educacional.datasource.repository.DocenteRepository;
@@ -19,12 +20,15 @@ public class TurmaServiceImpl extends GenericServiceImpl<TurmaEntity, TurmaReque
     private final DocenteRepository docenteRepository;
 
     public TurmaServiceImpl(TurmaRepository repository, CursoRepository cursoRepository, DocenteRepository docenteRepository) {
-        super(repository, new TurmaEntity());
+        super(repository);
         this.cursoRepository = cursoRepository;
         this.docenteRepository = docenteRepository;
     }
 
-    @Override
+    public TurmaEntity newEntity() {
+        return new TurmaEntity();
+    }
+
     public TurmaEntity equalProperties(TurmaEntity entity, TurmaRequest data) {
         String nome = data.nome();
         if (nome != null) {
@@ -47,10 +51,6 @@ public class TurmaServiceImpl extends GenericServiceImpl<TurmaEntity, TurmaReque
         } catch (ResponseStatusException ignore) {}
         if (curso != null) {
             entity.setCurso(curso);
-        }
-
-        if (entity.getDataEntrada() == null) {
-            entity.setDataEntrada(LocalDate.now());
         }
 
         return entity;

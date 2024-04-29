@@ -2,6 +2,7 @@ package com.fullstack.educacional.service;
 
 import com.fullstack.educacional.controller.dto.request.DocenteRequest;
 import com.fullstack.educacional.datasource.entity.DocenteEntity;
+import com.fullstack.educacional.datasource.entity.NotaEntity;
 import com.fullstack.educacional.datasource.entity.UsuarioEntity;
 import com.fullstack.educacional.datasource.repository.DocenteRepository;
 import com.fullstack.educacional.datasource.repository.UsuarioRepository;
@@ -17,9 +18,13 @@ public class DocenteServiceImpl extends GenericServiceImpl<DocenteEntity, Docent
     private final UsuarioRepository usuarioRepository;
 
     public DocenteServiceImpl(DocenteRepository repository, UsuarioRepository usuarioRepository) {
-        super(repository, new DocenteEntity());
+        super(repository);
         this.repository = repository;
         this.usuarioRepository = usuarioRepository;
+    }
+
+    public DocenteEntity newEntity() {
+        return new DocenteEntity();
     }
 
     @Override
@@ -32,7 +37,6 @@ public class DocenteServiceImpl extends GenericServiceImpl<DocenteEntity, Docent
         return repository.save(equalProperties(new DocenteEntity(), docenteRequest));
     }
 
-    @Override
     public DocenteEntity equalProperties(DocenteEntity entity, DocenteRequest data) {
         String nome = data.nome();
         if (nome != null) {

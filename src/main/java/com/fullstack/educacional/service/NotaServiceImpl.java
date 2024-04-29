@@ -25,10 +25,14 @@ public class NotaServiceImpl extends GenericServiceImpl<NotaEntity, NotaRequest,
             DocenteRepository docenteRepository,
             MateriaRepository materiaRepository
     ) {
-        super(repository, new NotaEntity());
+        super(repository);
         this.alunoRepository = alunoRepository;
         this.docenteRepository = docenteRepository;
         this.materiaRepository = materiaRepository;
+    }
+
+    public NotaEntity newEntity() {
+        return new NotaEntity();
     }
 
     @Override

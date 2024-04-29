@@ -29,12 +29,16 @@ public class AlunoServiceImpl extends GenericServiceImpl<AlunoEntity, AlunoReque
             NotaRepository notaRepository,
             TokenService tokenService
     ) {
-        super(repository, new AlunoEntity());
+        super(repository);
         this.repository = repository;
         this.turmaRepository = turmaRepository;
         this.usuarioRepository = usuarioRepository;
         this.notaRepository = notaRepository;
         this.tokenService = tokenService;
+    }
+
+    public AlunoEntity newEntity() {
+        return new AlunoEntity();
     }
 
     public AlunoEntity get(Long id, String token) {
@@ -54,7 +58,6 @@ public class AlunoServiceImpl extends GenericServiceImpl<AlunoEntity, AlunoReque
         return repository.save(equalProperties(new AlunoEntity(), alunoRequest));
     }
 
-    @Override
     public AlunoEntity equalProperties(AlunoEntity entity, AlunoRequest data) {
         String nome = data.nome();
         if (nome != null) {

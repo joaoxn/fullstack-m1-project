@@ -3,6 +3,7 @@ package com.fullstack.educacional.service;
 import com.fullstack.educacional.controller.dto.request.MateriaRequest;
 import com.fullstack.educacional.datasource.entity.CursoEntity;
 import com.fullstack.educacional.datasource.entity.MateriaEntity;
+import com.fullstack.educacional.datasource.entity.NotaEntity;
 import com.fullstack.educacional.datasource.repository.CursoRepository;
 import com.fullstack.educacional.datasource.repository.MateriaRepository;
 import org.springframework.http.HttpStatus;
@@ -16,11 +17,14 @@ public class MateriaServiceImpl extends GenericServiceImpl<MateriaEntity, Materi
     private final CursoRepository cursoRepository;
 
     public MateriaServiceImpl(MateriaRepository repository, CursoRepository cursoRepository) {
-        super(repository, new MateriaEntity());
+        super(repository);
         this.cursoRepository = cursoRepository;
     }
 
-    @Override
+    public MateriaEntity newEntity() {
+        return new MateriaEntity();
+    }
+
     public MateriaEntity equalProperties(MateriaEntity entity, MateriaRequest data) {
         String nome = data.nome();
         if (nome != null) {
