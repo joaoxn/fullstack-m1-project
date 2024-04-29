@@ -6,11 +6,13 @@ import com.fullstack.educacional.datasource.entity.UsuarioEntity;
 import com.fullstack.educacional.datasource.repository.PapelRepository;
 import com.fullstack.educacional.datasource.repository.UsuarioRepository;
 import com.fullstack.educacional.infra.exception.CustomErrorException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 public class UsuarioServiceImpl extends GenericServiceImpl<UsuarioEntity, UsuarioRequest, UsuarioRepository> implements GenericService<UsuarioEntity, UsuarioRequest> {
     private final BCryptPasswordEncoder bCryptEncoder;
     private final PapelRepository papelRepository;
@@ -59,11 +61,15 @@ public class UsuarioServiceImpl extends GenericServiceImpl<UsuarioEntity, Usuari
         String login = data.login();
         if (login != null) {
             entity.setLogin(login);
+        } else if (entity.getLogin() == null){
+            log.warn("{}.equalProperties() -> retornando usuário com 'login' nulo", getClass());
         }
 
         String senha = bCryptEncoder.encode(data.senha());
         if (senha != null) {
             entity.setSenha(senha);
+        } else if (entity.getLogin() == null){
+            log.warn("{}.equalProperties() -> retornando usuário com 'senha' nulo", getClass());
         }
 
         PapelEntity papel = null;
@@ -73,6 +79,8 @@ public class UsuarioServiceImpl extends GenericServiceImpl<UsuarioEntity, Usuari
         } catch (RuntimeException ignore) {}
         if (papel != null) {
             entity.setPapel(papel);
+        } else if (entity.getLogin() == null){
+            log.warn("{}.equalProperties() -> retornando usuário com 'papel' nulo", getClass());
         }
 
         return entity;

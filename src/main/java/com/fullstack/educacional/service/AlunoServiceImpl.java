@@ -64,35 +64,35 @@ public class AlunoServiceImpl extends GenericServiceImpl<AlunoEntity, AlunoReque
         String nome = data.nome();
         if (nome != null) {
             entity.setNome(nome);
-        } else {
+        } else if (entity.getNome() == null){
             log.warn("AlunoServiceImpl.equalProperties() -> retornando aluno com 'nome' nulo");
         }
         TurmaEntity turma = null;
         try {
             turma = turmaRepository.findById(data.turmaId())
                     .orElseThrow();
-        } catch (RuntimeException ignore) {
-            log.warn("AlunoServiceImpl.equalProperties() -> retornando aluno com 'turma' nulo");
-        }
+        } catch (RuntimeException ignore) {}
         if (turma != null) {
             entity.setTurma(turma);
+        } else if (entity.getTurma() == null){
+            log.warn("AlunoServiceImpl.equalProperties() -> retornando aluno com 'turma' nulo");
         }
 
         UsuarioEntity usuario = null;
         try {
             usuario = usuarioRepository.findByLogin(data.login())
                     .orElseThrow();
-        } catch (RuntimeException ignore) {
-            log.warn("AlunoServiceImpl.equalProperties() -> retornando aluno com 'usuario' nulo");
-        }
+        } catch (RuntimeException ignore) {}
         if (usuario != null) {
             entity.setUsuario(usuario);
+        } else if (entity.getUsuario() == null){
+            log.warn("AlunoServiceImpl.equalProperties() -> retornando aluno com 'usuario' nulo");
         }
 
         LocalDate dataNascimento = data.dataNascimento();
         if (dataNascimento != null) {
             entity.setDataNascimento(dataNascimento);
-        } else {
+        } else if (entity.getDataNascimento() == null){
             log.warn("AlunoServiceImpl.equalProperties() -> retornando aluno com 'dataNascimento' nulo");
         }
 
