@@ -4,6 +4,7 @@ import com.fullstack.educacional.controller.dto.request.LoginRequest;
 import com.fullstack.educacional.controller.dto.response.LoginResponse;
 import com.fullstack.educacional.datasource.entity.UsuarioEntity;
 import com.fullstack.educacional.datasource.repository.UsuarioRepository;
+import com.fullstack.educacional.infra.exception.CustomErrorException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -14,7 +15,6 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
 import java.util.List;
@@ -24,12 +24,12 @@ import java.util.List;
 @Slf4j
 public class TokenService {
 
-    private final BCryptPasswordEncoder bCryptEncoder; // decifrar senhas
-    private final JwtEncoder jwtEncoder; // codificar um JWT
-    private final JwtDecoder jwtDecoder; // decodifica um JWT
+    private final BCryptPasswordEncoder bCryptEncoder;
+    private final JwtEncoder jwtEncoder;
+    private final JwtDecoder jwtDecoder;
     private final UsuarioRepository usuarioRepository;
 
-    private final static long TEMPO_EXPIRACAO = 36000L; //contante de tempo de expiração em segundos
+    private final static long TEMPO_EXPIRACAO = 36000L; // Expiração em segundos
 
     public LoginResponse gerarToken(
             @RequestBody LoginRequest loginRequest
@@ -37,17 +37,17 @@ public class TokenService {
         String aaaa = loginRequest.login();
         List<UsuarioEntity> usuarios = usuarioRepository.findAll();
         UsuarioEntity usuarioEntity = usuarioRepository
-                .findByLogin(loginRequest.login()) // busca dados de usuario por loginUsuario
-                .orElseThrow(                                  // caso usuario não exista gera um erro
+                .findByLogin(loginRequest.login())
+                .orElseThrow(
                         ()->{
                             log.error("Erro, usuário não existe");
-                            return new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário com login "+ loginRequest.login() +"não encontrado");
+                            return new CustomErrorException(HttpStatus.NOT_FOUND, "Usuário com login "+ loginRequest.login() +" não encontrado");
                         }
                 );
 
         if(!usuarioEntity.senhaValida(loginRequest, bCryptEncoder)){ // valida se a senha recebida é a mesma que foi salva com BCrypt
             log.error("Senha incorreta");                      // caso senha não bata, gera um erro
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Senha incorreta");
+            throw new CustomErrorException(HttpStatus.UNAUTHORIZED, "Senha incorreta");
         }
 
         Instant now = Instant.now();

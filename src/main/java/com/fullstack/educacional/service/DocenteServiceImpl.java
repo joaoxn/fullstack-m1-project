@@ -2,13 +2,12 @@ package com.fullstack.educacional.service;
 
 import com.fullstack.educacional.controller.dto.request.DocenteRequest;
 import com.fullstack.educacional.datasource.entity.DocenteEntity;
-import com.fullstack.educacional.datasource.entity.NotaEntity;
 import com.fullstack.educacional.datasource.entity.UsuarioEntity;
 import com.fullstack.educacional.datasource.repository.DocenteRepository;
 import com.fullstack.educacional.datasource.repository.UsuarioRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
+import com.fullstack.educacional.infra.exception.CustomErrorException;
 
 import java.time.LocalDate;
 
@@ -30,9 +29,9 @@ public class DocenteServiceImpl extends GenericServiceImpl<DocenteEntity, Docent
     @Override
     public DocenteEntity create(DocenteRequest docenteRequest) {
         if (usuarioRepository.findByLogin(docenteRequest.login())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND))
+                .orElseThrow(() -> new CustomErrorException(HttpStatus.NOT_FOUND))
                 .getPapel().getNome().equals("ALUNO")) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tentou criar docente com um usuário com papel de ALUNO");
+            throw new CustomErrorException(HttpStatus.BAD_REQUEST, "Tentou criar docente com um usuário com papel de ALUNO");
         }
         return repository.save(equalProperties(new DocenteEntity(), docenteRequest));
     }
@@ -47,7 +46,7 @@ public class DocenteServiceImpl extends GenericServiceImpl<DocenteEntity, Docent
         try {
             usuario = usuarioRepository.findByLogin(data.login())
                     .orElseThrow();
-        } catch (ResponseStatusException ignored) {}
+        } catch (CustomErrorException ignored) {}
         if (usuario != null) {
             entity.setUsuario(usuario);
         }

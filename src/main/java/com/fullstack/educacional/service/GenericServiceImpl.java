@@ -4,7 +4,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ResponseStatusException;
+import com.fullstack.educacional.infra.exception.CustomErrorException;
 
 import java.util.List;
 
@@ -16,7 +16,7 @@ public abstract class GenericServiceImpl<E, DTO, R extends JpaRepository<E, Long
 
     public E get(Long id) {
         return repository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(
+                .orElseThrow(() -> new CustomErrorException(
                         HttpStatus.NOT_FOUND, "Entidade não encontrada com ID: " + id));
     }
 
@@ -32,7 +32,7 @@ public abstract class GenericServiceImpl<E, DTO, R extends JpaRepository<E, Long
     public E alter(Long id, DTO data) {
         E entityFound = repository.findById(id)
                 .orElseThrow(
-                        () -> new ResponseStatusException(
+                        () -> new CustomErrorException(
                                 HttpStatus.NOT_FOUND,
                                 "Entidade não encontrada com ID: " + id));
 
@@ -41,7 +41,7 @@ public abstract class GenericServiceImpl<E, DTO, R extends JpaRepository<E, Long
 
     public String delete(Long id) {
         E entity = repository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(
+                .orElseThrow(() -> new CustomErrorException(
                         HttpStatus.NOT_FOUND, "Entidade não encontrada com ID: " + id));
         repository.delete(entity);
         return "Entidade com ID: "+ id +" deletado com sucesso!";
