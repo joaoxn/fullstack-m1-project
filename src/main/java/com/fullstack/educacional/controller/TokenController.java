@@ -18,13 +18,11 @@ public class TokenController {
 
     @PostMapping("login")
     public ResponseEntity<LoginResponse> gerarToken(@RequestBody LoginRequest loginRequest) {
-
+        log.info("POST /login -> Gerando token para o login informado");
+        log.debug("POST /login -> Gerando token com login: {}", loginRequest.login());
         LoginResponse response = tokenService.gerarToken(loginRequest);
-
-        return ResponseEntity.ok( // Objeto usado para criar um corpo de resposta
-                response // corpo de resposta é um objeto de LoginResponse
-        );
-
+        log.info("POST /login -> Token gerado");
+        log.debug("POST /login -> Token gerado com tempo de expiração (em segundos): {}", response.tempoExpiracao());
+        return ResponseEntity.ok(response);
     }
-
 }

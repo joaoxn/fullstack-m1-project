@@ -5,6 +5,7 @@ import com.fullstack.educacional.datasource.entity.DocenteEntity;
 import com.fullstack.educacional.datasource.entity.UsuarioEntity;
 import com.fullstack.educacional.datasource.repository.DocenteRepository;
 import com.fullstack.educacional.datasource.repository.UsuarioRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import com.fullstack.educacional.infra.exception.CustomErrorException;
@@ -12,6 +13,7 @@ import com.fullstack.educacional.infra.exception.CustomErrorException;
 import java.time.LocalDate;
 
 @Service
+@Slf4j
 public class DocenteServiceImpl extends GenericServiceImpl<DocenteEntity, DocenteRequest, DocenteRepository> implements GenericService<DocenteEntity, DocenteRequest> {
     private final DocenteRepository repository;
     private final UsuarioRepository usuarioRepository;
@@ -40,16 +42,21 @@ public class DocenteServiceImpl extends GenericServiceImpl<DocenteEntity, Docent
         String nome = data.nome();
         if (nome != null) {
             entity.setNome(nome);
+        } else if (entity.getNome() == null){
+            log.warn("{}.equalProperties() -> retornando docente com 'nome' nulo", getClass());
         }
 
         UsuarioEntity usuario = null;
         try {
             usuario = usuarioRepository.findByLogin(data.login())
                     .orElseThrow();
-        } catch (CustomErrorException ignored) {}
+        } catch (RuntimeException ignore) {}
         if (usuario != null) {
             entity.setUsuario(usuario);
+        } else if (entity.getUsuario() == null){
+            log.warn("{}.equalProperties() -> retornando docente com 'usuario' nulo", getClass());
         }
+
         if (entity.getDataEntrada() == null) {
             entity.setDataEntrada(LocalDate.now());
         }

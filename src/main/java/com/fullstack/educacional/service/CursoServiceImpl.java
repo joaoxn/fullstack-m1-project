@@ -5,6 +5,7 @@ import com.fullstack.educacional.datasource.entity.CursoEntity;
 import com.fullstack.educacional.datasource.entity.MateriaEntity;
 import com.fullstack.educacional.datasource.repository.CursoRepository;
 import com.fullstack.educacional.datasource.repository.MateriaRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import com.fullstack.educacional.infra.exception.CustomErrorException;
@@ -12,6 +13,7 @@ import com.fullstack.educacional.infra.exception.CustomErrorException;
 import java.util.List;
 
 @Service
+@Slf4j
 public class CursoServiceImpl extends GenericServiceImpl<CursoEntity, CursoRequest, CursoRepository> implements GenericService<CursoEntity, CursoRequest> {
     private final MateriaRepository materiaRepository;
     private final CursoRepository repository;
@@ -30,6 +32,8 @@ public class CursoServiceImpl extends GenericServiceImpl<CursoEntity, CursoReque
         String nome = data.nome();
         if (nome != null) {
             entity.setNome(nome);
+        } else if (entity.getNome() == null){
+            log.warn("{}.equalProperties() -> retornando curso com 'nome' nulo", getClass());
         }
 
         return entity;

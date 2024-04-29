@@ -33,20 +33,18 @@ public class TokenService {
 
     public LoginResponse gerarToken(
             @RequestBody LoginRequest loginRequest
-    ){
-        String aaaa = loginRequest.login();
-        List<UsuarioEntity> usuarios = usuarioRepository.findAll();
+    ) {
         UsuarioEntity usuarioEntity = usuarioRepository
                 .findByLogin(loginRequest.login())
                 .orElseThrow(
-                        ()->{
+                        () -> {
                             log.error("Erro, usuário não existe");
-                            return new CustomErrorException(HttpStatus.NOT_FOUND, "Usuário com login "+ loginRequest.login() +" não encontrado");
+                            return new CustomErrorException(HttpStatus.NOT_FOUND, "Usuário com login " + loginRequest.login() + " não encontrado");
                         }
                 );
 
-        if(!usuarioEntity.senhaValida(loginRequest, bCryptEncoder)){ // valida se a senha recebida é a mesma que foi salva com BCrypt
-            log.error("Senha incorreta");                      // caso senha não bata, gera um erro
+        if (!usuarioEntity.senhaValida(loginRequest, bCryptEncoder)) { // valida se a senha recebida
+            log.error("Senha incorreta");
             throw new CustomErrorException(HttpStatus.UNAUTHORIZED, "Senha incorreta");
         }
 
@@ -62,19 +60,15 @@ public class TokenService {
                 .claim("scope", scope) // campo customizado, chamado scope que será adicionado ao token, alem dos campos anteriores
                 .build(); // constroi o Objeto de JwtClaimsSet
 
-        var valorJWT = jwtEncoder.encode(
-                        JwtEncoderParameters.from(claims) // parametros para encode do token
-                ) // token foi criado, porém está em uma classe que não tem o token puro, ele o token e várias coisas a mais
-                .getTokenValue(); // pegar o valor do token em si
+        var valorJWT = jwtEncoder.encode(JwtEncoderParameters.from(claims))
+                .getTokenValue();
 
-        return new LoginResponse(valorJWT, TEMPO_EXPIRACAO); // corpo de resposta é um objeto de LoginResponse
-
-
+        return new LoginResponse(valorJWT, TEMPO_EXPIRACAO);
     }
 
-
     public String buscaCampo(String token, String claim) {
-            token = token.substring(token.indexOf(' ')+1);
+        log.info("Método chamado: buscaCampo({}, {})", token, claim);
+        token = token.substring(token.indexOf(' ') + 1);
         return jwtDecoder
                 .decode(token) // decifra o token
                 .getClaims() // busca um campo especifico do token

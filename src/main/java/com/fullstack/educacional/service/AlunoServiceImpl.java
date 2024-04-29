@@ -4,6 +4,7 @@ import com.fullstack.educacional.controller.dto.request.AlunoRequest;
 import com.fullstack.educacional.controller.dto.response.PontuacaoResponse;
 import com.fullstack.educacional.datasource.entity.*;
 import com.fullstack.educacional.datasource.repository.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import com.fullstack.educacional.infra.exception.CustomErrorException;
@@ -12,6 +13,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Service
+@Slf4j
 public class AlunoServiceImpl extends GenericServiceImpl<AlunoEntity, AlunoRequest, AlunoRepository> implements GenericService<AlunoEntity, AlunoRequest> {
     private final AlunoRepository repository;
     private final TurmaRepository turmaRepository;
@@ -62,30 +64,36 @@ public class AlunoServiceImpl extends GenericServiceImpl<AlunoEntity, AlunoReque
         String nome = data.nome();
         if (nome != null) {
             entity.setNome(nome);
+        } else if (entity.getNome() == null){
+            log.warn("AlunoServiceImpl.equalProperties() -> retornando aluno com 'nome' nulo");
         }
         TurmaEntity turma = null;
         try {
             turma = turmaRepository.findById(data.turmaId())
                     .orElseThrow();
-        } catch (RuntimeException ignore) {
-        }
+        } catch (RuntimeException ignore) {}
         if (turma != null) {
             entity.setTurma(turma);
+        } else if (entity.getTurma() == null){
+            log.warn("AlunoServiceImpl.equalProperties() -> retornando aluno com 'turma' nulo");
         }
 
         UsuarioEntity usuario = null;
         try {
             usuario = usuarioRepository.findByLogin(data.login())
                     .orElseThrow();
-        } catch (RuntimeException ignore) {
-        }
+        } catch (RuntimeException ignore) {}
         if (usuario != null) {
             entity.setUsuario(usuario);
+        } else if (entity.getUsuario() == null){
+            log.warn("AlunoServiceImpl.equalProperties() -> retornando aluno com 'usuario' nulo");
         }
 
         LocalDate dataNascimento = data.dataNascimento();
         if (dataNascimento != null) {
             entity.setDataNascimento(dataNascimento);
+        } else if (entity.getDataNascimento() == null){
+            log.warn("AlunoServiceImpl.equalProperties() -> retornando aluno com 'dataNascimento' nulo");
         }
 
         return entity;
@@ -117,6 +125,7 @@ public class AlunoServiceImpl extends GenericServiceImpl<AlunoEntity, AlunoReque
     }
 
     public void validarPermissaoAluno(Long id, String token) {
+        log.info("AlunoServiceImpl.validarPermissaoAluno() -> Validando se usuário pode acessar o endpoint");
         Long usuarioId = Long.valueOf(
                 tokenService.buscaCampo(token, "sub")
         );
@@ -131,7 +140,9 @@ public class AlunoServiceImpl extends GenericServiceImpl<AlunoEntity, AlunoReque
                                 .getUsuario()
                                 .getId()
                 )) {
+            log.error("AlunoServiceImpl.validarPermissaoAluno() -> Aluno não autorizado");
             throw new CustomErrorException(HttpStatus.UNAUTHORIZED, "Você não tem acesso a essas informações por não serem suas. (Tentou acessar aluno com id: " + id + ")");
         }
+        log.info("AlunoServiceImpl.validarPermissaoAluno() -> Usuário autorizado com sucesso");
     }
 }
