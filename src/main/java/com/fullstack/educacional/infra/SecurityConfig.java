@@ -46,23 +46,19 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/alunos/**")
                         .hasAnyAuthority("SCOPE_ALUNO", "SCOPE_PROFESSOR", "SCOPE_PEDAGOGICO", "SCOPE_ADM")
                         // Acesso de PROFESSOR+ => Todos os endpoints que não são DELETE e começando em notas ou igual a alunos/{id}/notas
-                        .requestMatchers(req -> (
-                                req.getRequestURI().startsWith("/notas") ||
-                                        req.getRequestURI().endsWith("/notas") ||
-                                        req.getRequestURI().endsWith("/pontuacao")
-                        ) && !req.getMethod().equals(HttpMethod.DELETE.toString()))
+                        .requestMatchers(req ->
+                                req.getRequestURI().startsWith("/notas") &&
+                                        !req.getMethod().equals(HttpMethod.DELETE.toString()))
                         .hasAnyAuthority("SCOPE_PROFESSOR", "SCOPE_ADM")
                         // Acesso de RECRUITER+ => Todos os endpoints que não são DELETE e começando em docentes
-                        .requestMatchers(req -> (
-                                req.getRequestURI().startsWith("/docentes")
-                        ) && !req.getMethod().equals(HttpMethod.DELETE.toString()))
+                        .requestMatchers(req ->
+                                req.getRequestURI().startsWith("/docentes") &&
+                                        !req.getMethod().equals(HttpMethod.DELETE.toString()))
                         .hasAnyAuthority("SCOPE_RECRUITER", "SCOPE_PEDAGOGICO", "SCOPE_ADM")
                         // Acesso de PEDAGOGICO+ => Todos os endpoints que não são DELETE e começando em turmas, cursos, docentes ou alunos
                         .requestMatchers(req -> (
                                 req.getRequestURI().startsWith("/turmas") ||
-                                        req.getRequestURI().startsWith("/cursos") ||
-                                        req.getRequestURI().startsWith("/docentes") ||
-                                        req.getRequestURI().startsWith("/alunos")
+                                        req.getRequestURI().startsWith("/cursos")
                         ) && !req.getMethod().equals(HttpMethod.DELETE.toString()))
                         .hasAnyAuthority("SCOPE_PEDAGOGICO", "SCOPE_ADM")
                         // Acesso de ADM => Todos os endpoints

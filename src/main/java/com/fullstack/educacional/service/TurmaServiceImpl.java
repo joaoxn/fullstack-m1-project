@@ -39,7 +39,13 @@ public class TurmaServiceImpl extends GenericServiceImpl<TurmaEntity, TurmaReque
         try {
             docente = docenteRepository.findById(data.docenteId())
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        } catch (ResponseStatusException ignore) {}
+
+            if (!docente.getUsuario().getPapel().getNome().equals("PROFESSOR")) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            }
+        } catch (ResponseStatusException e) {
+            docente = null;
+        }
         if (docente != null) {
             entity.setDocente(docente);
         }
