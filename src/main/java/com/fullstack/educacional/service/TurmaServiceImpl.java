@@ -42,7 +42,7 @@ public class TurmaServiceImpl extends GenericServiceImpl<TurmaEntity, TurmaReque
             entity.setNome(nome);
         }
 
-        DocenteEntity docente = null;
+        DocenteEntity docente;
         try {
             docente = docenteRepository.findById(data.docenteId())
                     .orElseThrow(() -> new CustomErrorException(HttpStatus.NOT_FOUND));
@@ -50,7 +50,7 @@ public class TurmaServiceImpl extends GenericServiceImpl<TurmaEntity, TurmaReque
             if (!docente.getUsuario().getPapel().getNome().equals("PROFESSOR")) {
                 throw new CustomErrorException(HttpStatus.BAD_REQUEST);
             }
-        } catch (CustomErrorException e) {
+        } catch (RuntimeException e) {
             docente = null;
         }
         if (docente != null) {
@@ -61,7 +61,7 @@ public class TurmaServiceImpl extends GenericServiceImpl<TurmaEntity, TurmaReque
         try {
             curso = cursoRepository.findById(data.cursoId())
                     .orElseThrow(() -> new CustomErrorException(HttpStatus.NOT_FOUND));
-        } catch (CustomErrorException ignore) {}
+        } catch (RuntimeException ignore) {}
         if (curso != null) {
             entity.setCurso(curso);
         }

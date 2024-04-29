@@ -34,9 +34,9 @@ public class NotaController {
     @PostMapping
     public ResponseEntity<NotaEntity> post(@RequestBody NotaRequest request, @RequestHeader(name = "Authorization") String token) {
         log.info("POST /notas -> Criando nota");
-        log.debug("POST /notas -> Criando nota:\nValor: {},\nID do Aluno: {},\nID da Matéria: {}",
+        log.debug("POST /notas -> Criando nota com as seguintes informações:\nValor: {},\nID do Aluno: {},\nID da Matéria: {}",
                 request.valor(), request.alunoId(), request.materiaId());
-        log.trace("POST /notas -> Criando nota por usuário com token: {}", token);
+        log.trace("POST /notas -> Criando nota por usuário com token: \n{}", token);
         return ResponseEntity.ok(service.create(request, token));
     }
 

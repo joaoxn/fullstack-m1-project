@@ -44,7 +44,7 @@ public class TurmaController {
             @RequestBody TurmaRequest turmaData
     ) {
         log.info("PUT /turmas/{} -> Alterando turma por id", id);
-        log.debug("PUT /turmas/{} -> Alterando turma por id:\nNome: {},\nID do Curso: {},\nID do Docente: {}",
+        log.debug("PUT /turmas/{} -> Alterando turma para as seguintes informações:\nNome: {},\nID do Curso: {},\nID do Docente: {}",
                 id, turmaData.nome(), turmaData.cursoId(), turmaData.docenteId());
         return ResponseEntity.ok(service.alter(id, turmaData));
     }

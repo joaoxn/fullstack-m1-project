@@ -46,7 +46,7 @@ public class DocenteServiceImpl extends GenericServiceImpl<DocenteEntity, Docent
         try {
             usuario = usuarioRepository.findByLogin(data.login())
                     .orElseThrow();
-        } catch (CustomErrorException ignored) {}
+        } catch (RuntimeException ignore) {}
         if (usuario != null) {
             entity.setUsuario(usuario);
         }

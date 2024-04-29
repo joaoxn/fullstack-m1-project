@@ -70,7 +70,7 @@ public class UsuarioServiceImpl extends GenericServiceImpl<UsuarioEntity, Usuari
         try {
             papel = papelRepository.findByNome(data.papel())
                     .orElseThrow(() -> new CustomErrorException(HttpStatus.NOT_FOUND));
-        } catch (CustomErrorException ignored) {}
+        } catch (RuntimeException ignore) {}
         if (papel != null) {
             entity.setPapel(papel);
         }

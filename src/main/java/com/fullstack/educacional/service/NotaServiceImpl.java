@@ -60,7 +60,7 @@ public class NotaServiceImpl extends GenericServiceImpl<NotaEntity, NotaRequest,
         try {
             aluno = alunoRepository.findById(data.alunoId())
                     .orElseThrow(() -> new CustomErrorException(HttpStatus.NOT_FOUND));
-        } catch (CustomErrorException ignore) {}
+        } catch (RuntimeException ignore) {}
         if (aluno != null) {
             entity.setAluno(aluno);
         }
@@ -69,7 +69,7 @@ public class NotaServiceImpl extends GenericServiceImpl<NotaEntity, NotaRequest,
         try {
             materia = materiaRepository.findById(data.materiaId())
                     .orElseThrow(() -> new CustomErrorException(HttpStatus.NOT_FOUND));
-        } catch (CustomErrorException ignore) {}
+        } catch (RuntimeException ignore) {}
         if (materia != null) {
             entity.setMateria(materia);
         }

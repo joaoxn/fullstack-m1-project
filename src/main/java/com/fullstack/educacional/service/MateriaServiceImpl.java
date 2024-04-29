@@ -32,7 +32,7 @@ public class MateriaServiceImpl extends GenericServiceImpl<MateriaEntity, Materi
         try {
             curso = cursoRepository.findById(data.cursoId())
                     .orElseThrow(() -> new CustomErrorException(HttpStatus.NOT_FOUND));
-        } catch (CustomErrorException ignore) {}
+        } catch (RuntimeException ignore) {}
         if (curso != null) {
             entity.setCurso(curso);
         }
