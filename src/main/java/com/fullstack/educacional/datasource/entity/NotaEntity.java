@@ -18,7 +18,7 @@ public class NotaEntity {
     private AlunoEntity aluno;
 
     @ManyToOne
-    @JoinColumn(name = "professor_id")
+    @JoinColumn(name = "docente_id")
     private DocenteEntity docente;
 
     @ManyToOne

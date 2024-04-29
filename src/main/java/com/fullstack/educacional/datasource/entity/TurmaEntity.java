@@ -17,10 +17,8 @@ public class TurmaEntity {
 
     private String nome;
 
-    private LocalDate dataEntrada;
-
     @ManyToOne
-    @JoinColumn(name = "professor_id", nullable = false)
+    @JoinColumn(name = "docente_id", nullable = false)
     private DocenteEntity docente;
 
     @ManyToOne

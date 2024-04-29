@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -33,7 +34,8 @@ public class TokenService {
     public LoginResponse gerarToken(
             @RequestBody LoginRequest loginRequest
     ){
-
+        String aaaa = loginRequest.login();
+        List<UsuarioEntity> usuarios = usuarioRepository.findAll();
         UsuarioEntity usuarioEntity = usuarioRepository
                 .findByLogin(loginRequest.login()) // busca dados de usuario por loginUsuario
                 .orElseThrow(                                  // caso usuario não exista gera um erro

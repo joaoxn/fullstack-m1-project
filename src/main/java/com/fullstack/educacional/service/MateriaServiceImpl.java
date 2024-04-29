@@ -36,10 +36,6 @@ public class MateriaServiceImpl extends GenericServiceImpl<MateriaEntity, Materi
             entity.setCurso(curso);
         }
 
-        if (entity.getDataEntrada() == null) {
-            entity.setDataEntrada(LocalDate.now());
-        }
-
         return entity;
     }
 }

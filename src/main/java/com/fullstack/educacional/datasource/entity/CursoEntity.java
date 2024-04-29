@@ -17,6 +17,4 @@ public class CursoEntity {
 
     @Column(nullable = false)
     private String nome;
-
-    private LocalDate dataEntrada;
 }

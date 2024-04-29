@@ -18,8 +18,6 @@ public class MateriaEntity {
     @Column(nullable = false)
     private String nome;
 
-    private LocalDate dataEntrada;
-
     @ManyToOne
     @JoinColumn(name = "curso_id")
     private CursoEntity curso;

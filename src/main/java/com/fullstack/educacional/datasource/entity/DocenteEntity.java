@@ -20,6 +20,7 @@ public class DocenteEntity {
 
     private LocalDate dataEntrada;
 
+    @OneToOne
     @JoinColumn(name = "usuario_id", nullable = false)
     private UsuarioEntity usuario;
 }
