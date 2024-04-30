@@ -1,4 +1,4 @@
-package com.fullstack.educacional.infra;
+package com.fullstack.educacional.infra.security;
 
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
@@ -41,7 +41,30 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.POST, "/login").permitAll() // permite os endpoints que tenham o texto que condiz com /login
-                        .requestMatchers(HttpMethod.POST, "/cadastro").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/usuarios/senha").authenticated()
+                        // Acesso de ALUNO+ => Todos os endpoints que são GET e começando em alunos/{id}
+                        .requestMatchers(HttpMethod.GET, "/alunos/**")
+                        .hasAnyAuthority("SCOPE_ALUNO", "SCOPE_PROFESSOR", "SCOPE_PEDAGOGICO", "SCOPE_ADM")
+                        // Acesso de PROFESSOR+ => Todos os endpoints que não são DELETE e começando em notas ou igual a alunos/{id}/notas
+                        .requestMatchers(req ->
+                                req.getRequestURI().startsWith("/notas") &&
+                                        !req.getMethod().equals(HttpMethod.DELETE.toString()))
+                        .hasAnyAuthority("SCOPE_PROFESSOR", "SCOPE_ADM")
+                        // Acesso de RECRUITER+ => Todos os endpoints que não são DELETE e começando em docentes
+                        .requestMatchers(req ->
+                                req.getRequestURI().startsWith("/docentes") &&
+                                        !req.getMethod().equals(HttpMethod.DELETE.toString()))
+                        .hasAnyAuthority("SCOPE_RECRUITER", "SCOPE_PEDAGOGICO", "SCOPE_ADM")
+                        // Acesso de PEDAGOGICO+ => Todos os endpoints que não são DELETE e começando em turmas, cursos, docentes ou alunos
+                        .requestMatchers(req -> (
+                                req.getRequestURI().startsWith("/turmas") ||
+                                        req.getRequestURI().startsWith("/cursos")
+                        ) && !req.getMethod().equals(HttpMethod.DELETE.toString()))
+                        .hasAnyAuthority("SCOPE_PEDAGOGICO", "SCOPE_ADM")
+                        // Acesso de ADM => Todos os endpoints
+                        .requestMatchers(req -> true)
+                        .hasAuthority("SCOPE_ADM")
+
                         .anyRequest().authenticated() // pede autenticação para todos os endpoints que não foram permitidos
                 )
                 .csrf(AbstractHttpConfigurer::disable) // desabilita o CSRF, ele bloqueia alguns tipos de chamadas por padrão
