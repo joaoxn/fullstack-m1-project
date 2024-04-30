@@ -43,8 +43,8 @@ Após configurar o banco de dados, abra o projeto, localize o arquivo [Educacion
 Para interagir com o projeto, utilize uma aplicação que permite testar APIs web, como o Postman, para acessar os endpoints. A baseUrl do projeto é 'localhost:8081'. Portanto, para acessar os endpoints do projeto, utilize da seguinte forma:  
 localhost:8081/{endpoint}
 
-Relação das entidades:
-()
+- **Relação das entidades:**
+![](assets/relacao-entidades.png)
 
 ### Como utilizar
 O projeto possui vários endpoints, mas a maioria deles não são acessíveis ao público. O único endpoint disponível publicamente é:  
